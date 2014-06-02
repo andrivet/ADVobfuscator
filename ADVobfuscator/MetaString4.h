@@ -29,7 +29,7 @@ struct MetaString4<0, K, Indexes<I...>>
         for(int i = 0; i < sizeof...(I); ++i)
             buffer_[i + 1] = decrypt(buffer_[i + 1]);
         buffer_[sizeof...(I) + 1] = 0;
-        LOG("--- MetaString4<" << 0 << "," << static_cast<int>(buffer_[0]) << ">");
+        LOG("--- Select MetaString4 implementation #" << 0 << " with key 0x" << hex(buffer_[0]));
         return buffer_ + 1;
     }
 
@@ -51,7 +51,7 @@ struct MetaString4<1, K, Indexes<I...>>
         for(int i = 0; i < sizeof...(I); ++i)
             buffer_[i + 1] = decrypt(buffer_[i + 1], i);
         buffer_[sizeof...(I) + 1] = 0;
-        LOG("--- MetaString4<" << 1 << "," << static_cast<int>(buffer_[0]) << ">");
+        LOG("--- Select MetaString4 implementation #" << 1 << " with key 0x" << hex(buffer_[0]));
         return buffer_ + 1;
     }
     
@@ -75,7 +75,7 @@ struct MetaString4<2, K, Indexes<I...>>
         for(int i = 0; i < sizeof...(I); ++i)
             buffer_[i] = decrypt(buffer_[i]);
         buffer_[sizeof...(I)] = 0;
-        LOG("--- MetaString4<" << 2 << "," << static_cast<int>(key(K)) << ">");
+        LOG("--- Select MetaString4 implementation #" << 2 << " with key 0x" << hex(key(K)));
         return buffer_;
     }
     
