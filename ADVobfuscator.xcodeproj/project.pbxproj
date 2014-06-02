@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		BE9245B5193C727C00BBB60D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE9245B4193C727C00BBB60D /* main.cpp */; };
-		BE9245B7193C727C00BBB60D /* ADVobfuscator.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = BE9245B6193C727C00BBB60D /* ADVobfuscator.1 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -18,7 +17,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				BE9245B7193C727C00BBB60D /* ADVobfuscator.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -27,7 +25,17 @@
 /* Begin PBXFileReference section */
 		BE9245B1193C727C00BBB60D /* ADVobfuscator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ADVobfuscator; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE9245B4193C727C00BBB60D /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		BE9245B6193C727C00BBB60D /* ADVobfuscator.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = ADVobfuscator.1; sourceTree = "<group>"; };
+		BE9245BD193C733100BBB60D /* Indexes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Indexes.h; sourceTree = "<group>"; };
+		BE9245BE193C733100BBB60D /* Inline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Inline.h; sourceTree = "<group>"; };
+		BE9245BF193C733100BBB60D /* Log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
+		BE9245C0193C733100BBB60D /* MetaFactorial.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaFactorial.h; sourceTree = "<group>"; };
+		BE9245C1193C733100BBB60D /* MetaFibonacci.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaFibonacci.h; sourceTree = "<group>"; };
+		BE9245C2193C733100BBB60D /* ObfuscatedCall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObfuscatedCall.h; sourceTree = "<group>"; };
+		BE9245C3193C733100BBB60D /* MetaRandom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaRandom.h; sourceTree = "<group>"; };
+		BE9245C4193C733100BBB60D /* MetaString1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaString1.h; sourceTree = "<group>"; };
+		BE9245C5193C733100BBB60D /* MetaString2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaString2.h; sourceTree = "<group>"; };
+		BE9245C6193C733100BBB60D /* MetaString3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaString3.h; sourceTree = "<group>"; };
+		BE9245C7193C733100BBB60D /* MetaString4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaString4.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,8 +68,18 @@
 		BE9245B3193C727C00BBB60D /* ADVobfuscator */ = {
 			isa = PBXGroup;
 			children = (
+				BE9245BD193C733100BBB60D /* Indexes.h */,
+				BE9245BE193C733100BBB60D /* Inline.h */,
+				BE9245BF193C733100BBB60D /* Log.h */,
+				BE9245C0193C733100BBB60D /* MetaFactorial.h */,
+				BE9245C1193C733100BBB60D /* MetaFibonacci.h */,
+				BE9245C2193C733100BBB60D /* ObfuscatedCall.h */,
+				BE9245C3193C733100BBB60D /* MetaRandom.h */,
+				BE9245C4193C733100BBB60D /* MetaString1.h */,
+				BE9245C5193C733100BBB60D /* MetaString2.h */,
+				BE9245C6193C733100BBB60D /* MetaString3.h */,
+				BE9245C7193C733100BBB60D /* MetaString4.h */,
 				BE9245B4193C727C00BBB60D /* main.cpp */,
-				BE9245B6193C727C00BBB60D /* ADVobfuscator.1 */,
 			);
 			path = ADVobfuscator;
 			sourceTree = "<group>";
@@ -156,6 +174,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -180,6 +203,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEPLOYMENT_POSTPROCESSING = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -189,6 +213,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
 			};
