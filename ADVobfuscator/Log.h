@@ -34,7 +34,7 @@ inline HexChar hex(char c, int w = 2)
 }}
 
 #if defined(DEBUG) && DEBUG == 1
-#define LOG(str) std::cerr << str << "\n"
+#define LOG(str) std::cerr << str << std::endl
 #else
 #define LOG(str) ((void)0)
 #endif
