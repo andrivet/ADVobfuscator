@@ -36,6 +36,7 @@
 		BE9245C5193C733100BBB60D /* MetaString2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaString2.h; sourceTree = "<group>"; };
 		BE9245C6193C733100BBB60D /* MetaString3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaString3.h; sourceTree = "<group>"; };
 		BE9245C7193C733100BBB60D /* MetaString4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaString4.h; sourceTree = "<group>"; };
+		BEB405181951CF0200DEC3BA /* Unroller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Unroller.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +81,7 @@
 				BE9245C6193C733100BBB60D /* MetaString3.h */,
 				BE9245C7193C733100BBB60D /* MetaString4.h */,
 				BE9245B4193C727C00BBB60D /* main.cpp */,
+				BEB405181951CF0200DEC3BA /* Unroller.h */,
 			);
 			path = ADVobfuscator;
 			sourceTree = "<group>";
@@ -256,6 +258,7 @@
 				BE9245BC193C727C00BBB60D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

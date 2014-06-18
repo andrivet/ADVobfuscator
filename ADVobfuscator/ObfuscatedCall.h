@@ -19,6 +19,7 @@
 
 #include "Indexes.h"
 #include "Log.h"
+#include "Unroller.h"
 
 namespace msm = boost::msm;
 namespace mpl = boost::mpl;
@@ -112,13 +113,18 @@ namespace andrivet { namespace ADVobfuscator {
         template<typename M, typename E, typename F, typename... T>
         inline void ProcessEvents(M& machine, F f, T... t)
         {
+            // This is just an example of what is possible. In actual production code
+            // it would be better to call the actual event E in the middle of this loop.
+            
             machine.start();
-            for(int i = 0; i < 55 + MetaRandom<__COUNTER__, 44>::value; ++i)
+            
+            Unroller<55 + MetaRandom<__COUNTER__, 44>::value>{}([&]()
             {
                 machine.process_event(event5{});
                 machine.process_event(event2{});
                 machine.process_event(event4{});
-            }
+            });
+            
             machine.process_event(event5{});
             machine.process_event(event2{});
             machine.process_event(event3{});
