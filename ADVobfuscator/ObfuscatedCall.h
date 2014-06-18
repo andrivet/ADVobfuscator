@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <tuple>
+#include <type_traits>
 #include <boost/msm/back/state_machine.hpp>
 #include <boost/msm/front/state_machine_def.hpp>
 // functors
@@ -26,11 +27,11 @@ using namespace boost::msm::front;
 namespace andrivet { namespace ADVobfuscator {
 
     struct Void {};
-
+    
     template<typename R, typename F, typename... T>
     struct event
     {
-        event(F f, T... t): f_{f}, data_{t...} {}
+        constexpr event(F f, T... t): f_{f}, data_{t...} {}
 
         R call() const
         {
@@ -39,29 +40,14 @@ namespace andrivet { namespace ADVobfuscator {
         }
 
     private:
-        template<int... I>
-        R call_(Indexes<I...>) const { return f_(std::get<I>(data_)...); }
+        template<typename U = R, int... I>
+        typename std::enable_if<!std::is_same<U, Void>::value, U>::type
+          call_(Indexes<I...>) const { return f_.original()(std::get<I>(data_)...); }
 
-    private:
-        F f_;
-        std::tuple<T...> data_;
-    };
+        template<typename U = R, int... I>
+        typename std::enable_if<std::is_same<U, Void>::value, Void>::type
+          call_(Indexes<I...>) const { f_.original()(std::get<I>(data_)...); return Void{}; }
 
-    template<typename F, typename... T>
-    struct eventv
-    {
-        eventv(F f, T... t): f_{f}, data_{t...} {}
-        
-        Void call() const
-        {
-            using I = typename Make_Indexes<sizeof...(T)>::type;
-            return call_(I{});
-        }
-        
-    private:
-        template<int... I>
-        Void call_(Indexes<I...>) const { f_(std::get<I>(data_)...); return Void{}; }
-        
     private:
         F f_;
         std::tuple<T...> data_;
@@ -141,7 +127,7 @@ namespace andrivet { namespace ADVobfuscator {
     }
         
     template<typename R, typename F, typename... T>
-    R ALWAYS_INLINE ObfuscatedCall(F f, T... t)
+    R ALWAYS_INLINE ObfuscatedCallRet(F f, T... t)
     {
         using E = event<R, F, T...>;
         using M = msm::back::state_machine<Machine<E, R>>;
@@ -154,14 +140,32 @@ namespace andrivet { namespace ADVobfuscator {
     template<typename F, typename... T>
     void ALWAYS_INLINE ObfuscatedCall(F f, T... t)
     {
-        using E = eventv<F, T...>;
+        using E = event<Void, F, T...>;
         using M = msm::back::state_machine<Machine<E>>;
         
         M machine;
         ProcessEvents<M, E>(machine, f, t...);
     };
+    
+    template<typename F>
+    struct ObfuscatedFunc
+    {
+        unsigned long f_;
+        int offset_;
+        
+        constexpr ObfuscatedFunc(F f, int offset): f_{reinterpret_cast<unsigned long>(f) + offset}, offset_{offset} {}
+        constexpr F original() const { return reinterpret_cast<F>(f_ - offset_); }
+    };
+    
+    template<typename F>
+    constexpr ObfuscatedFunc<F> MakeObfuscatedFunc(F f, int offset) { return ObfuscatedFunc<F>(f, offset); }
 
 }}
+
+// Warning: ##__VA_ARGS__ is not portable (only __VA_ARGS__ is)
+
+#define OBFUSCATED_CALL(f, ...) ObfuscatedCall(MakeObfuscatedFunc(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL_RET(t, f, ...) ObfuscatedCallRet<t>(MakeObfuscatedFunc(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
 
 
 #endif
