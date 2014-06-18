@@ -2,8 +2,23 @@
 //  main.cpp
 //  ADVobfusctor
 //
-//  Copyright (c) 2014 Andrivet. All rights reserved.
+// Copyright (c) 2010-2014, Sebastien Andrivet
+// All rights reserved.
 //
+// Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+//
+// 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// To remove Boost assert messages
+#if !defined(DEBUG) || DEBUG == 0
+#define BOOST_DISABLE_ASSERTS
+#endif
 
 #include <iostream>
 #include "MetaFactorial.h"
@@ -46,8 +61,8 @@ void SampleEncrypted2()
 {
     cout << "--------------------" << endl;
     cout << "Encryption of string literals - version 2 - Fix algorithm, fix key, not truncated" << endl;
-    cout << "Britney Spears"_obfuscated2 << endl;
-    cout << "Miley Cyrus"_obfuscated2 << endl;
+    cout << OBFUSCATED2("Britney Spears") << endl;
+    cout << OBFUSCATED2("Miley Cyrus") << endl;
     cout << OBFUSCATED2("Katy Perry") << endl;
 }
 
@@ -117,20 +132,22 @@ void SampleFiniteStateMachine_function_to_protect()
     cout << OBFUSCATED4("Womenizer") << endl;
 };
 
-int SampleFiniteStateMachine_function_to_protect_with_parameter(const char* text)
+int SampleFiniteStateMachine_function_to_protect_with_parameter(const char* text1, const char* text2)
 {
-    cout << OBFUSCATED4("Oops I did it ") << text << endl;
+    cout << OBFUSCATED4("Oops I ") << text1 << OBFUSCATED4(" it ") << text2 << endl;
     return 12345;
 };
 
 void SampleFiniteStateMachine()
 {
     cout << "--------------------" << endl;
-    cout << "Obfuscate a call by using a finite state machine" << endl;
+    cout << "Obfuscate calls by using a finite state machine" << endl;
+
+    cout << "Call a function without parameters and without returning a value" << endl;
+    OBFUSCATED_CALL(SampleFiniteStateMachine_function_to_protect);
     
-    ObfuscatedCall(SampleFiniteStateMachine_function_to_protect);
-    
-    int result = ObfuscatedCall<int>(SampleFiniteStateMachine_function_to_protect_with_parameter, OBFUSCATED4("again"));
+    cout << "Call a function with a parameter and returning a value" << endl;
+    int result = OBFUSCATED_CALL_RET(int, SampleFiniteStateMachine_function_to_protect_with_parameter, OBFUSCATED4("did"), OBFUSCATED4("again"));
     cout << "Result: " << result << endl;
 }
 

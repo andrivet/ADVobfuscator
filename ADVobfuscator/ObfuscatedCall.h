@@ -110,7 +110,7 @@ namespace andrivet { namespace ADVobfuscator {
     namespace
     {
         template<typename M, typename E, typename F, typename... T>
-        void ALWAYS_INLINE ProcessEvents(M machine, F f, T... t)
+        inline void ProcessEvents(M& machine, F f, T... t)
         {
             machine.start();
             for(int i = 0; i < 55 + MetaRandom<__COUNTER__, 44>::value; ++i)
@@ -127,7 +127,7 @@ namespace andrivet { namespace ADVobfuscator {
     }
         
     template<typename R, typename F, typename... T>
-    R ALWAYS_INLINE ObfuscatedCallRet(F f, T... t)
+    inline R ObfuscatedCallRet(F f, T... t)
     {
         using E = event<R, F, T...>;
         using M = msm::back::state_machine<Machine<E, R>>;
@@ -138,7 +138,7 @@ namespace andrivet { namespace ADVobfuscator {
     };
 
     template<typename F, typename... T>
-    void ALWAYS_INLINE ObfuscatedCall(F f, T... t)
+    inline void ObfuscatedCall(F f, T... t)
     {
         using E = event<Void, F, T...>;
         using M = msm::back::state_machine<Machine<E>>;

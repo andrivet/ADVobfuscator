@@ -34,7 +34,7 @@ private:
     char buffer_[sizeof...(I) + 1];
 };
 
-constexpr ALWAYS_INLINE const char* operator "" _obfuscated1(const char* str, size_t)
+inline const char* operator "" _obfuscated1(const char* str, size_t)
 {
     return MetaString1<0, 1, 2, 3, 4, 5>(str).decrypt();
 }

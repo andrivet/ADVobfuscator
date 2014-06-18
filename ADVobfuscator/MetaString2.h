@@ -41,7 +41,7 @@ private:
 
 #define OBFUSCATED2(str) (MetaString2<Make_Indexes<sizeof(str) - 1>::type>(str).decrypt())
 
-constexpr ALWAYS_INLINE const char* operator "" _obfuscated2(const char* str, size_t n)
+inline const char* operator "" _obfuscated2(const char* str, size_t n)
 {
     using I = Make_Indexes<32>::type;
     return MetaString2<I>(str).decrypt();
