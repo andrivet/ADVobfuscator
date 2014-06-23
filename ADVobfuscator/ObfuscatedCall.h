@@ -31,8 +31,10 @@
 #include "Log.h"
 #include "Unroller.h"
 
-// Obfuscate function call with a finite state machine.
+// Obfuscate function call with a finite state machine (FSM).
 // This is only a (simplified) example to show the principle
+// In this example, the target is called at the end of the FSM so it can be located.
+// In production, it would be better to put it in the middle of the FSM with some computing triggering it.
 
 namespace msm = boost::msm;
 namespace mpl = boost::mpl;
