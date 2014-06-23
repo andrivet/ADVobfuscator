@@ -1,6 +1,6 @@
 //
 //  main.cpp
-//  ADVobfusctor
+//  ADVobfuscator
 //
 // Copyright (c) 2010-2014, Sebastien Andrivet
 // All rights reserved.
@@ -33,6 +33,7 @@
 using namespace std;
 using namespace andrivet::ADVobfuscator;
 
+// Demonstrate generation of Factorial at compile time
 void SampleFactorial()
 {
     cout << "--------------------" << endl;
@@ -40,6 +41,7 @@ void SampleFactorial()
     cout << "Factorial(5) = " << Factorial<5>::value << endl;
 }
 
+// Demonstrate generation of Fibonacci sequence at compile time
 void SampleFibonacci()
 {
     cout << "--------------------" << endl;
@@ -48,15 +50,17 @@ void SampleFibonacci()
     cout << "Fibonacci(20) = " << Fibonacci<20>::value << endl;
 }
 
+// First implementation of obfuscated string
 void SampleEncrypted1()
 {
     cout << "--------------------" << endl;
     cout << "Encryption of string literals - version 1 - Fix algorithm, fix key, truncated" << endl;
-    cout << "Britney Spears"_obfuscated1 << endl;
-    cout << "Miley Cyrus"_obfuscated1 << endl;
+    cout << OBFUSCATED1("Britney Spears") << endl;
+    cout << OBFUSCATED1("Miley Cyrus") << endl;
     cout << OBFUSCATED1("Katy Perry") << endl;
 }
 
+// Second implementation of obfuscated string
 void SampleEncrypted2()
 {
     cout << "--------------------" << endl;
@@ -66,14 +70,14 @@ void SampleEncrypted2()
     cout << OBFUSCATED2("Katy Perry") << endl;
 }
 
-
+// Generate a sequence of random numbers [0..10) at runtime
 void SampleMetaRandom()
 {
-    // Do not use a loop, it will not work (it will print 10 tims the same number):
+    // Do not use a loop, it will not work (it will print 10 times the same number):
     // loops are executed at run-time,
     // we want to generate 10 different numbers are compile-time.
     cout << "--------------------" << endl;
-    cout << "Generate random numbers at compile-time" << endl;
+    cout << "Generate random numbers in range [0..10) at compile-time" << endl;
     cout << MetaRandom<__COUNTER__, 10>::value << endl;
     cout << MetaRandom<__COUNTER__, 10>::value << endl;
     cout << MetaRandom<__COUNTER__, 10>::value << endl;
@@ -86,6 +90,7 @@ void SampleMetaRandom()
     cout << MetaRandom<__COUNTER__, 10>::value << endl;
 }
 
+// Third implementation of obfuscated string
 void SampleEncryped3()
 {
     cout << "--------------------" << endl;
@@ -95,6 +100,7 @@ void SampleEncryped3()
     cout << OBFUSCATED3("Katy Perry") << endl;
 }
 
+// Fourth and final implementation of obfuscated string
 void SampleEncryped4()
 {
     cout << "--------------------" << endl;
@@ -105,6 +111,8 @@ void SampleEncryped4()
     cout << OBFUSCATED4("Britney Spears") << endl;
 }
 
+// Fourth implementation of obfuscated string
+// Declaration and usage are separated
 void SampleEncryped4_differed()
 {
     cout << "--------------------" << endl;
@@ -119,14 +127,6 @@ void SampleEncryped4_differed()
     cout << miley.decrypt()   << endl;
 }
 
-void SampleEncryped4_simple()
-{
-    OBFUSCATED4("Britney Spears");
-    OBFUSCATED4("Britney Spears");
-    OBFUSCATED4("Britney Spears");
-    OBFUSCATED4("Britney Spears");
-}
-
 void SampleFiniteStateMachine_function_to_protect()
 {
     cout << OBFUSCATED4("Womenizer") << endl;
@@ -138,6 +138,7 @@ int SampleFiniteStateMachine_function_to_protect_with_parameter(const char* text
     return 12345;
 };
 
+// Obfuscate function calls
 void SampleFiniteStateMachine()
 {
     cout << "--------------------" << endl;
@@ -151,10 +152,12 @@ void SampleFiniteStateMachine()
     cout << "Result: " << result << endl;
 }
 
+// Entry point
 int main(int argc, const char * argv[])
 {
     SampleFactorial();
     SampleFibonacci();
+    SampleMetaRandom();
     SampleEncrypted1();
     SampleEncrypted2();
     SampleEncryped3();
