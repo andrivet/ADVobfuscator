@@ -46,12 +46,12 @@ namespace andrivet { namespace ADVobfuscator {
     struct Void {};
     
     // Event template to call a function F with a list of parameters.
-    // WARNING: All parameters are passed as values so they will be copied. This is perhaps not what you want.
+    // WARNING: F is passed as value so will be copied. This is perhaps not what you want.
     template<typename R, typename F, typename... Args>
     struct event
     {
         // Constructor
-        constexpr event(F f, Args... args): f_{f}, data_{args...} {}
+        constexpr event(F f, Args&... args): f_{f}, data_{args...} {}
 
         // Call target function
         R call() const
@@ -74,7 +74,7 @@ namespace andrivet { namespace ADVobfuscator {
 
     private:
         F f_;
-        std::tuple<Args...> data_;
+        std::tuple<Args&...> data_;
     };
     
     // Events
@@ -138,7 +138,7 @@ namespace andrivet { namespace ADVobfuscator {
     namespace
     {
         template<typename M, typename E, typename F, typename... Args>
-        inline void ProcessEvents(M& machine, F f, Args... args)
+        inline void ProcessEvents(M& machine, F f, Args&&... args)
         {
             // This is just an example of what is possible. In actual production code it would be better to call event E in the middle of this loop and to make transitions more complex.
             
@@ -161,29 +161,29 @@ namespace andrivet { namespace ADVobfuscator {
     }
     
     // When function F is returning a value
-    template<typename R, typename F, typename... T>
-    inline R ObfuscatedCallRet(F f, T... t)
+    template<typename R, typename F, typename... Args>
+    inline R ObfuscatedCallRet(F f, Args&&... args)
     {
-        using E = event<R, F, T...>;
+        using E = event<R, F, Args&...>;
         using M = msm::back::state_machine<Machine<E, R>>;
         
         M machine;
-        ProcessEvents<M, E>(machine, f, t...);
+        ProcessEvents<M, E>(machine, f, std::forward<Args>(args)...);
         return machine.result_;
     };
 
     // When function F is not returning a value
-    template<typename F, typename... T>
-    inline void ObfuscatedCall(F f, T... t)
+    template<typename F, typename... Args>
+    inline void ObfuscatedCall(F f, Args&&... args)
     {
-        using E = event<Void, F, T...>;
+        using E = event<Void, F, Args&...>;
         using M = msm::back::state_machine<Machine<E>>;
         
         M machine;
-        ProcessEvents<M, E>(machine, f, t...);
+        ProcessEvents<M, E>(machine, f, std::forward<Args>(args)...);
     };
     
-    // Obfuscate the address of the target
+    // Obfuscate the address of the target. Very simple implementation but enough to annoy IDA and Co.
     template<typename F>
     struct ObfuscatedFunc
     {
