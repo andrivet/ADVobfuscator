@@ -46,7 +46,7 @@ namespace andrivet { namespace ADVobfuscator {
     struct Void {};
     
     // Event template to call a function F with a list of parameters.
-    // WARNING: F is passed as value so will be copied. This is perhaps not what you want.
+    // Note: F is passed as value.
     template<typename R, typename F, typename... Args>
     struct event
     {
