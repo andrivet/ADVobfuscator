@@ -62,12 +62,15 @@ private:
 };
 
 
-// Custom literal suffix
+// Custom literal suffix. Not supported by Intel compiler
+#if !defined(__ICC) && !defined(__INTEL_COMPILER)
+
 inline const char* operator "" _obfuscated2(const char* str, size_t n)
 {
     using I = Make_Indexes<32>::type;
     return MetaString2<I>(str).decrypt();
 }
+#endif
     
 }}
 

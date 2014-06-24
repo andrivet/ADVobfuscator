@@ -42,33 +42,42 @@ using namespace boost::msm::front;
 
 namespace andrivet { namespace ADVobfuscator {
 
+    // Same as void but can be instantiated
     struct Void {};
     
-    template<typename R, typename F, typename... T>
+    // Event template to call a function F with a list of parameters.
+    // WARNING: All parameters are passed as values so they will be copied. This is perhaps not what you want.
+    template<typename R, typename F, typename... Args>
     struct event
     {
-        constexpr event(F f, T... t): f_{f}, data_{t...} {}
+        // Constructor
+        constexpr event(F f, Args... args): f_{f}, data_{args...} {}
 
+        // Call target function
         R call() const
         {
-            using I = typename Make_Indexes<sizeof...(T)>::type;
+            // Generate a list of indexes to extract arguments from tuple
+            using I = typename Make_Indexes<sizeof...(Args)>::type;
             return call_(I{});
         }
 
     private:
+        // When F is returning a value
         template<typename U = R, int... I>
         typename std::enable_if<!std::is_same<U, Void>::value, U>::type
           call_(Indexes<I...>) const { return f_.original()(std::get<I>(data_)...); }
 
+        // When F does not return a value (void)
         template<typename U = R, int... I>
         typename std::enable_if<std::is_same<U, Void>::value, Void>::type
           call_(Indexes<I...>) const { f_.original()(std::get<I>(data_)...); return Void{}; }
 
     private:
         F f_;
-        std::tuple<T...> data_;
+        std::tuple<Args...> data_;
     };
     
+    // Events
     namespace
     {
         struct event1 {};
@@ -78,9 +87,11 @@ namespace andrivet { namespace ADVobfuscator {
         struct event5 {};
     }
 
+    // Our Finite State Machine
     template<typename E, typename R = Void>
     struct Machine : public msm::front::state_machine_def<Machine<E, R>>
     {
+        // States
         struct State1 : public msm::front::state<>{};
         struct State2 : public msm::front::state<>{};
         struct State3 : public msm::front::state<>{};
@@ -88,7 +99,7 @@ namespace andrivet { namespace ADVobfuscator {
         struct State5 : public msm::front::state<>{};
         struct Final  : public msm::front::state<>{};
         
-        // transition actions
+        // Transition action. It will call our target
         struct State5ToFinal
         {
             template<typename EVT, typename FSM, typename SRC, typename TGT>
@@ -99,7 +110,7 @@ namespace andrivet { namespace ADVobfuscator {
             }
         };
         
-        // the initial state of the player SM. Must be defined
+        // Initial state of the FSM. Must be defined
         using initial_state = State1;
         
         // Transition table
@@ -120,19 +131,20 @@ namespace andrivet { namespace ADVobfuscator {
             //  +---------+-------------+---------+---------------------+----------------------+
         > {};
         
+        // Result of the target
         R result_;
     };
 
     namespace
     {
-        template<typename M, typename E, typename F, typename... T>
-        inline void ProcessEvents(M& machine, F f, T... t)
+        template<typename M, typename E, typename F, typename... Args>
+        inline void ProcessEvents(M& machine, F f, Args... args)
         {
-            // This is just an example of what is possible. In actual production code
-            // it would be better to call the actual event E in the middle of this loop.
+            // This is just an example of what is possible. In actual production code it would be better to call event E in the middle of this loop and to make transitions more complex.
             
             machine.start();
             
+            // Generate a lot of transitions (at least 55, at most 98)
             Unroller<55 + MetaRandom<__COUNTER__, 44>::value>{}([&]()
             {
                 machine.process_event(event5{});
@@ -143,10 +155,12 @@ namespace andrivet { namespace ADVobfuscator {
             machine.process_event(event5{});
             machine.process_event(event2{});
             machine.process_event(event3{});
-            machine.process_event(E{f, t...});
+            // This will call our target. In actual production code it would be better to call event E in the middle of the FSM processing.
+            machine.process_event(E{f, args...});
         };
     }
-        
+    
+    // When function F is returning a value
     template<typename R, typename F, typename... T>
     inline R ObfuscatedCallRet(F f, T... t)
     {
@@ -158,6 +172,7 @@ namespace andrivet { namespace ADVobfuscator {
         return machine.result_;
     };
 
+    // When function F is not returning a value
     template<typename F, typename... T>
     inline void ObfuscatedCall(F f, T... t)
     {
@@ -168,6 +183,7 @@ namespace andrivet { namespace ADVobfuscator {
         ProcessEvents<M, E>(machine, f, t...);
     };
     
+    // Obfuscate the address of the target
     template<typename F>
     struct ObfuscatedFunc
     {
@@ -178,12 +194,13 @@ namespace andrivet { namespace ADVobfuscator {
         constexpr F original() const { return reinterpret_cast<F>(f_ - offset_); }
     };
     
+    // Create a instance of ObfuscatedFunc and deduce types
     template<typename F>
     constexpr ObfuscatedFunc<F> MakeObfuscatedFunc(F f, int offset) { return ObfuscatedFunc<F>(f, offset); }
 
 }}
 
-// Warning: ##__VA_ARGS__ is not portable (only __VA_ARGS__ is)
+// Warning: ##__VA_ARGS__ is not portable (only __VA_ARGS__ is). However, ##__VA_ARGS__ is far better (handles cases when it is empty)
 
 #define OBFUSCATED_CALL(f, ...) ObfuscatedCall(MakeObfuscatedFunc(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
 #define OBFUSCATED_CALL_RET(t, f, ...) ObfuscatedCallRet<t>(MakeObfuscatedFunc(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)

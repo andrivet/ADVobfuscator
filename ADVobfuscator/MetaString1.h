@@ -59,11 +59,13 @@ private:
     char buffer_[sizeof...(I) + 1];
 };
 
-// Custom literal suffix
+// Custom literal suffix. Not supported by Intel compiler
+#if !defined(__ICC) && !defined(__INTEL_COMPILER)
 inline const char* operator "" _obfuscated1(const char* str, size_t)
 {
     return MetaString1<0, 1, 2, 3, 4, 5>(str).decrypt();
 }
+#endif
     
 }}
 
