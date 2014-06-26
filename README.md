@@ -6,16 +6,16 @@ ADVobfuctor demonstates how to use C++11 language to generate, at compile time, 
 Files
 =====
 
-Indexes.h			Generate list of indexes at compile time (0, 1, 2, ... N)
-MetaFactorial.h		Compute factorial at compile time
-MetaFibonacci.h		Compute fibonacci sequence at compile time
-MetaRandom.h		Generate a pseudo-random number at compile time
-MetaString1.h		Obfuscated string - version 1
-MetaString2.h		Obfuscated string - version 2 - Remove truncation
-MetaString3.h		Obfuscated string - version 3 - Random key
-MetaString4.h		Obfuscated string - version 4 - Random encryption algorithm
-ObfuscatedCall.h	Obfuscate function call
-main.cpp			Samples
+- Indexes.h			Generate list of indexes at compile time (0, 1, 2, ... N)
+- MetaFactorial.h		Compute factorial at compile time
+- MetaFibonacci.h		Compute fibonacci sequence at compile time
+- MetaRandom.h		Generate a pseudo-random number at compile time
+- MetaString1.h		Obfuscated string - version 1
+- MetaString2.h		Obfuscated string - version 2 - Remove truncation
+- MetaString3.h		Obfuscated string - version 3 - Random key
+- MetaString4.h		Obfuscated string - version 4 - Random encryption algorithm
+- ObfuscatedCall.h	Obfuscate function call
+- main.cpp			Samples
 
 
 Copyright and license
