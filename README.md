@@ -1,7 +1,7 @@
-What is ADVobfuctor
-=====================
+What is ADVobfuscator?
+======================
 
-ADVobfuctor demonstates how to use C++11 language to generate, at compile time, obfuscated code without using any external tool and without modifying the compiler. The technics presented rely only on C++11, as standardized by ISO. It shows also how to introduce some form of randomness to generate polymorphic code and it gives some concrete examples like the encryption of strings literals and the obfuscation of calls using finite state machines.
+ADVobfuscator demonstates how to use C++11 language to generate, at compile time, obfuscated code without using any external tool and without modifying the compiler. The technics presented rely only on C++11, as standardized by ISO. It shows also how to introduce some form of randomness to generate polymorphic code and it gives some concrete examples like the encryption of strings literals and the obfuscation of calls using finite state machines.
 
 Files
 =====
