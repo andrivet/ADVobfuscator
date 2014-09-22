@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BE9245B5193C727C00BBB60D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE9245B4193C727C00BBB60D /* main.cpp */; };
+		BEF1E65219D047DB00189A9D /* DetectDebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BEF1E65119D047DB00189A9D /* DetectDebugger.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,6 +39,9 @@
 		BE9245C7193C733100BBB60D /* MetaString4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaString4.h; sourceTree = "<group>"; };
 		BEB405181951CF0200DEC3BA /* Unroller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Unroller.h; sourceTree = "<group>"; };
 		BEF1E64F19D014AE00189A9D /* MetaFSM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaFSM.h; sourceTree = "<group>"; };
+		BEF1E65019D0438000189A9D /* DetectDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetectDebugger.h; sourceTree = "<group>"; };
+		BEF1E65119D047DB00189A9D /* DetectDebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DetectDebugger.cpp; sourceTree = "<group>"; };
+		BEF1E65419D0499200189A9D /* ObfuscatedCallWithPredicate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObfuscatedCallWithPredicate.h; sourceTree = "<group>"; };
 		BEF8096A19580D0800A68C2B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -71,21 +75,24 @@
 		BE9245B3193C727C00BBB60D /* ADVobfuscator */ = {
 			isa = PBXGroup;
 			children = (
+				BEF8096A19580D0800A68C2B /* .gitignore */,
+				BEF1E65119D047DB00189A9D /* DetectDebugger.cpp */,
+				BEF1E65019D0438000189A9D /* DetectDebugger.h */,
 				BE9245BD193C733100BBB60D /* Indexes.h */,
 				BE9245BE193C733100BBB60D /* Inline.h */,
 				BE9245BF193C733100BBB60D /* Log.h */,
+				BE9245B4193C727C00BBB60D /* main.cpp */,
 				BE9245C0193C733100BBB60D /* MetaFactorial.h */,
 				BE9245C1193C733100BBB60D /* MetaFibonacci.h */,
-				BE9245C2193C733100BBB60D /* ObfuscatedCall.h */,
+				BEF1E64F19D014AE00189A9D /* MetaFSM.h */,
 				BE9245C3193C733100BBB60D /* MetaRandom.h */,
 				BE9245C4193C733100BBB60D /* MetaString1.h */,
 				BE9245C5193C733100BBB60D /* MetaString2.h */,
 				BE9245C6193C733100BBB60D /* MetaString3.h */,
 				BE9245C7193C733100BBB60D /* MetaString4.h */,
-				BE9245B4193C727C00BBB60D /* main.cpp */,
+				BE9245C2193C733100BBB60D /* ObfuscatedCall.h */,
+				BEF1E65419D0499200189A9D /* ObfuscatedCallWithPredicate.h */,
 				BEB405181951CF0200DEC3BA /* Unroller.h */,
-				BEF8096A19580D0800A68C2B /* .gitignore */,
-				BEF1E64F19D014AE00189A9D /* MetaFSM.h */,
 			);
 			path = ADVobfuscator;
 			sourceTree = "<group>";
@@ -142,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE9245B5193C727C00BBB60D /* main.cpp in Sources */,
+				BEF1E65219D047DB00189A9D /* DetectDebugger.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

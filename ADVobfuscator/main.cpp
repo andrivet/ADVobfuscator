@@ -31,9 +31,12 @@
 #include "MetaString3.h"
 #include "MetaString4.h"
 #include "ObfuscatedCall.h"
+#include "DetectDebugger.h"
+#include "ObfuscatedCallWithPredicate.h"
 
 using namespace std;
 using namespace andrivet::ADVobfuscator;
+using namespace andrivet::ADVobfuscator::ADVfsm;
 
 // Demonstrate generation of Factorial at compile time
 void SampleFactorial()
@@ -154,6 +157,22 @@ void SampleFiniteStateMachine1()
     cout << "Result: " << result << endl;
 }
 
+void SampleFiniteStateMachine_important_function_in_the_application()
+{
+    cout << OBFUSCATED4("PRISM") << endl;
+}
+
+// Obfuscate functions calls. Behaviour is dependend of a runtime value (debugger detected or not)
+void SampleFiniteStateMachine2()
+{
+    cout << "--------------------" << endl;
+    cout << "Obfuscate calls by using a finite state machine and detect if a debugger is there or not" << endl;
+    
+    cout << "Call a function without parameters and without returning a value" << endl;
+    cout << "It will only be called if a debugger is NOT detected" << endl;
+    OBFUSCATED_CALL2(SampleFiniteStateMachine_important_function_in_the_application);
+}
+
 // Entry point
 int main(int argc, const char * argv[])
 {
@@ -166,6 +185,7 @@ int main(int argc, const char * argv[])
     SampleEncryped4();
     SampleEncryped4_differed();
     SampleFiniteStateMachine1();
+    SampleFiniteStateMachine2();
     
     return 0;
 }

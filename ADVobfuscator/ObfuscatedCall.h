@@ -27,19 +27,16 @@
 // In this example, the target is called at the end of the FSM so it can be located.
 // In production, it would be better to put it in the middle of the FSM with some computing triggering it.
 
-namespace andrivet { namespace ADVobfuscator {
+namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
 
     using namespace ADVfsm;
   
     // Events
-    namespace
-    {
-        struct event1 {};
-        struct event2 {};
-        struct event3 {};
-        struct event4 {};
-        struct event5 {};
-    }
+    struct event1 {};
+    struct event2 {};
+    struct event3 {};
+    struct event4 {};
+    struct event5 {};
 
     // Our Finite State Machine
     template<typename E, typename R = Void>
@@ -96,7 +93,7 @@ namespace andrivet { namespace ADVobfuscator {
         static inline void apply(M& machine, F f, Args&&... args)
         {
             // This is just an example of what is possible. In actual production code it would be better to call event E in the middle of this loop and to make transitions more complex.
-            
+                    
             machine.start();
             
             // Generate a lot of transitions (at least 55, at most 98)
@@ -115,12 +112,12 @@ namespace andrivet { namespace ADVobfuscator {
         }
     };
 
-}}
+}}}
 
-// Warning: ##__VA_ARGS__ is not portable (only __VA_ARGS__ is). However, ##__VA_ARGS__ is far better (handles cases when it is empty)
+// Warning: ##__VA_ARGS__ is not portable (only __VA_ARGS__ is). However, ##__VA_ARGS__ is far better (handles cases when it is empty) and supported by most compilers
 
-#define OBFUSCATED_CALL1(f, ...) ObfuscatedCall<andrivet::ADVobfuscator::Machine, andrivet::ADVobfuscator::RunMachine>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
-#define OBFUSCATED_CALL_RET1(t, f, ...) ObfuscatedCallRet<andrivet::ADVobfuscator::Machine, andrivet::ADVobfuscator::RunMachine, t>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL1(f, ...) ObfuscatedCall<andrivet::ADVobfuscator::Machine1::Machine, andrivet::ADVobfuscator::Machine1::RunMachine>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL_RET1(t, f, ...) ObfuscatedCallRet<andrivet::ADVobfuscator::Machine1::Machine, andrivet::ADVobfuscator::Machine1::RunMachine, t>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
 
 
 #endif
