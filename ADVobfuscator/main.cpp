@@ -145,7 +145,7 @@ void SampleFiniteStateMachine()
 {
     cout << "--------------------" << endl;
     cout << "Obfuscate calls by using a finite state machine" << endl;
-
+    
     cout << "Call a function without parameters and without returning a value" << endl;
     OBFUSCATED_CALL(SampleFiniteStateMachine_function_to_protect);
     

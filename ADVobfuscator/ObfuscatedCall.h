@@ -20,65 +20,17 @@
 #ifndef ObfuscatedCall_h
 #define ObfuscatedCall_h
 
-#include <iostream>
-#include <tuple>
-#include <type_traits>
-#include <boost/msm/back/state_machine.hpp>
-#include <boost/msm/front/state_machine_def.hpp>
-// functors
-#include <boost/msm/front/functor_row.hpp>
-#include <boost/msm/front/euml/common.hpp>
-
-#include "Indexes.h"
-#include "Log.h"
-#include "Unroller.h"
+#include "MetaFSM.h"
 
 // Obfuscate function call with a finite state machine (FSM).
 // This is only a (simplified) example to show the principle
 // In this example, the target is called at the end of the FSM so it can be located.
 // In production, it would be better to put it in the middle of the FSM with some computing triggering it.
 
-namespace msm = boost::msm;
-namespace mpl = boost::mpl;
-using namespace boost::msm::front;
-
 namespace andrivet { namespace ADVobfuscator {
 
-    // Same as void but can be instantiated
-    struct Void {};
-    
-    // Event template to call a function F with a list of parameters.
-    // Note: F is passed as value.
-    template<typename R, typename F, typename... Args>
-    struct event
-    {
-        // Constructor
-        constexpr event(F f, Args&... args): f_{f}, data_{args...} {}
-
-        // Call target function
-        R call() const
-        {
-            // Generate a list of indexes to extract arguments from tuple
-            using I = typename Make_Indexes<sizeof...(Args)>::type;
-            return call_(I{});
-        }
-
-    private:
-        // When F is returning a value
-        template<typename U = R, int... I>
-        typename std::enable_if<!std::is_same<U, Void>::value, U>::type
-          call_(Indexes<I...>) const { return f_.original()(std::get<I>(data_)...); }
-
-        // When F does not return a value (void)
-        template<typename U = R, int... I>
-        typename std::enable_if<std::is_same<U, Void>::value, Void>::type
-          call_(Indexes<I...>) const { f_.original()(std::get<I>(data_)...); return Void{}; }
-
-    private:
-        F f_;
-        std::tuple<Args&...> data_;
-    };
-    
+    using namespace ADVfsm;
+  
     // Events
     namespace
     {
@@ -137,10 +89,11 @@ namespace andrivet { namespace ADVobfuscator {
         R result_;
     };
 
-    namespace
+    // It is not possible to use a template function as a template argument so use a metafunction class
+    template<typename M, typename E, typename F, typename... Args>
+    struct RunMachine
     {
-        template<typename M, typename E, typename F, typename... Args>
-        inline void ProcessEvents(M& machine, F f, Args&&... args)
+        static inline void apply(M& machine, F f, Args&&... args)
         {
             // This is just an example of what is possible. In actual production code it would be better to call event E in the middle of this loop and to make transitions more complex.
             
@@ -159,53 +112,15 @@ namespace andrivet { namespace ADVobfuscator {
             machine.process_event(event3{});
             // This will call our target. In actual production code it would be better to call event E in the middle of the FSM processing.
             machine.process_event(E{f, args...});
-        };
-    }
-    
-    // When function F is returning a value
-    template<typename R, typename F, typename... Args>
-    inline R ObfuscatedCallRet(F f, Args&&... args)
-    {
-        using E = event<R, F, Args&...>;
-        using M = msm::back::state_machine<Machine<E, R>>;
-        
-        M machine;
-        ProcessEvents<M, E>(machine, f, std::forward<Args>(args)...);
-        return machine.result_;
+        }
     };
-
-    // When function F is not returning a value
-    template<typename F, typename... Args>
-    inline void ObfuscatedCall(F f, Args&&... args)
-    {
-        using E = event<Void, F, Args&...>;
-        using M = msm::back::state_machine<Machine<E>>;
-        
-        M machine;
-        ProcessEvents<M, E>(machine, f, std::forward<Args>(args)...);
-    };
-    
-    // Obfuscate the address of the target. Very simple implementation but enough to annoy IDA and Co.
-    template<typename F>
-    struct ObfuscatedFunc
-    {
-        unsigned long f_;
-        int offset_;
-        
-        constexpr ObfuscatedFunc(F f, int offset): f_{reinterpret_cast<unsigned long>(f) + offset}, offset_{offset} {}
-        constexpr F original() const { return reinterpret_cast<F>(f_ - offset_); }
-    };
-    
-    // Create a instance of ObfuscatedFunc and deduce types
-    template<typename F>
-    constexpr ObfuscatedFunc<F> MakeObfuscatedFunc(F f, int offset) { return ObfuscatedFunc<F>(f, offset); }
 
 }}
 
 // Warning: ##__VA_ARGS__ is not portable (only __VA_ARGS__ is). However, ##__VA_ARGS__ is far better (handles cases when it is empty)
 
-#define OBFUSCATED_CALL(f, ...) ObfuscatedCall(MakeObfuscatedFunc(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
-#define OBFUSCATED_CALL_RET(t, f, ...) ObfuscatedCallRet<t>(MakeObfuscatedFunc(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL(f, ...) ObfuscatedCall<andrivet::ADVobfuscator::Machine, andrivet::ADVobfuscator::RunMachine>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL_RET(t, f, ...) ObfuscatedCallRet<andrivet::ADVobfuscator::Machine, andrivet::ADVobfuscator::RunMachine, t>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
 
 
 #endif
