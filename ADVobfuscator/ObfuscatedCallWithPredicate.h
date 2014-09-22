@@ -28,15 +28,17 @@
 
 namespace andrivet { namespace ADVobfuscator { namespace Machine2 {
     
-    // Events
-    struct event1 {};
-    struct event2 {};
-    
     // Finite State Machine
+    // E: Event associated with target
     // P: Predicate
+    // R: Type of return value
     template<typename E, typename P, typename R = Void>
     struct Machine : public msm::front::state_machine_def<Machine<E, R>>
     {
+        // -- Events
+        struct event1 {};
+        struct event2 {};
+        
         // --- States
         struct State1 : public msm::front::state<>{};
         struct State2 : public msm::front::state<>{};

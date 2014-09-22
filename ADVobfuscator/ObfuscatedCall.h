@@ -29,18 +29,20 @@
 
 namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
   
-    // Events
-    struct event1 {};
-    struct event2 {};
-    struct event3 {};
-    struct event4 {};
-    struct event5 {};
-
-    // Our Finite State Machine
+    // Finite State Machine
+    // E: Event associated with target
+    // R: Type of return value
     template<typename E, typename R = Void>
     struct Machine : public msm::front::state_machine_def<Machine<E, R>>
     {
-        // States
+        // --- Events
+        struct event1 {};
+        struct event2 {};
+        struct event3 {};
+        struct event4 {};
+        struct event5 {};
+        
+        // --- States
         struct State1 : public msm::front::state<>{};
         struct State2 : public msm::front::state<>{};
         struct State3 : public msm::front::state<>{};
@@ -48,7 +50,7 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
         struct State5 : public msm::front::state<>{};
         struct Final  : public msm::front::state<>{};
         
-        // Transition action. It will call our target
+        // --- Transitions
         struct CallTarget
         {
             template<typename EVT, typename FSM, typename SRC, typename TGT>
@@ -59,10 +61,10 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
             }
         };
         
-        // Initial state of the FSM. Must be defined
+        // --- Initial state of the FSM. Must be defined
         using initial_state = State1;
         
-        // Transition table
+        // --- Transition table
         struct transition_table : mpl::vector<
         //    Start     Event         Next      Action               Guard
         //  +---------+-------------+---------+---------------------+----------------------+
