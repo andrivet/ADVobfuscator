@@ -141,16 +141,16 @@ int SampleFiniteStateMachine_function_to_protect_with_parameter(const char* text
 };
 
 // Obfuscate function calls
-void SampleFiniteStateMachine()
+void SampleFiniteStateMachine1()
 {
     cout << "--------------------" << endl;
     cout << "Obfuscate calls by using a finite state machine" << endl;
     
     cout << "Call a function without parameters and without returning a value" << endl;
-    OBFUSCATED_CALL(SampleFiniteStateMachine_function_to_protect);
+    OBFUSCATED_CALL1(SampleFiniteStateMachine_function_to_protect);
     
     cout << "Call a function with a parameter and returning a value" << endl;
-    int result = OBFUSCATED_CALL_RET(int, SampleFiniteStateMachine_function_to_protect_with_parameter, OBFUSCATED4("did"), OBFUSCATED4("again"));
+    auto result = OBFUSCATED_CALL_RET1(int, SampleFiniteStateMachine_function_to_protect_with_parameter, OBFUSCATED4("did"), OBFUSCATED4("again"));
     cout << "Result: " << result << endl;
 }
 
@@ -165,7 +165,7 @@ int main(int argc, const char * argv[])
     SampleEncryped3();
     SampleEncryped4();
     SampleEncryped4_differed();
-    SampleFiniteStateMachine();
+    SampleFiniteStateMachine1();
     
     return 0;
 }

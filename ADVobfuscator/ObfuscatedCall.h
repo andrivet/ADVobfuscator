@@ -119,8 +119,8 @@ namespace andrivet { namespace ADVobfuscator {
 
 // Warning: ##__VA_ARGS__ is not portable (only __VA_ARGS__ is). However, ##__VA_ARGS__ is far better (handles cases when it is empty)
 
-#define OBFUSCATED_CALL(f, ...) ObfuscatedCall<andrivet::ADVobfuscator::Machine, andrivet::ADVobfuscator::RunMachine>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
-#define OBFUSCATED_CALL_RET(t, f, ...) ObfuscatedCallRet<andrivet::ADVobfuscator::Machine, andrivet::ADVobfuscator::RunMachine, t>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL1(f, ...) ObfuscatedCall<andrivet::ADVobfuscator::Machine, andrivet::ADVobfuscator::RunMachine>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL_RET1(t, f, ...) ObfuscatedCallRet<andrivet::ADVobfuscator::Machine, andrivet::ADVobfuscator::RunMachine, t>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
 
 
 #endif
