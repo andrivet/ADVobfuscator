@@ -107,6 +107,8 @@ namespace andrivet { namespace ADVobfuscator {
         M machine;
         Run::run(machine, f, std::forward<Args>(args)...);
     };
+    
+    // Note: It is possible to merge these two members with ObfuscatedCall and ObfuscatedCallRet (by introducing a TruePredicate) but it will make the 1st FSM example more complicated.
 
     // When function F is returning a value
     // FSM: Finite State Machine

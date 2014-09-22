@@ -151,10 +151,10 @@ void SampleFiniteStateMachine1()
     cout << "Obfuscate calls by using a finite state machine" << endl;
     
     cout << "Call a function without parameters and without returning a value" << endl;
-    OBFUSCATED_CALL1(SampleFiniteStateMachine_function_to_protect);
+    OBFUSCATED_CALL(SampleFiniteStateMachine_function_to_protect);
     
     cout << "Call a function with a parameter and returning a value" << endl;
-    auto result = OBFUSCATED_CALL_RET1(int, SampleFiniteStateMachine_function_to_protect_with_parameter, OBFUSCATED4("did"), OBFUSCATED4("again"));
+    auto result = OBFUSCATED_CALL_RET(int, SampleFiniteStateMachine_function_to_protect_with_parameter, OBFUSCATED4("did"), OBFUSCATED4("again"));
     cout << "Result: " << result << endl;
 }
 
@@ -174,7 +174,7 @@ void SampleFiniteStateMachine2()
     
     cout << "Call a function without parameters and without returning a value" << endl;
     cout << "It will only be called if a debugger is NOT detected" << endl;
-    OBFUSCATED_CALL2(DetectDebugger, SampleFiniteStateMachine_important_function_in_the_application);
+    OBFUSCATED_CALL_P(DetectDebugger, SampleFiniteStateMachine_important_function_in_the_application);
 }
 
 // Entry point
