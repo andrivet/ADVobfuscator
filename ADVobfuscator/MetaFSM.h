@@ -77,26 +77,69 @@ namespace andrivet { namespace ADVobfuscator {
     };
 
     // When function F is returning a value
-    template<template<typename, typename> class FSM, template<typename, typename, typename, typename...> class RM, typename R, typename F, typename... Args>
+    // FSM: Finite State Machine
+    // R: Type of the returned value
+    // F: Function (target)
+    // Args: Arguments of target
+    template<template<typename, typename> class FSM, typename R, typename F, typename... Args>
     inline R ObfuscatedCallRet(F f, Args&&... args)
     {
         using E = event<R, F, Args&...>;
         using M = msm::back::state_machine<FSM<E, R>>;
+        using Run = typename FSM<E, R>::template Run<F, Args...>;
         
         M machine;
-        RM<M, E, F, Args...>::apply(machine, f, std::forward<Args>(args)...);
+        Run::run(machine, f, std::forward<Args>(args)...);
         return machine.result_;
     };
     
     // When function F is not returning a value
-    template<template<typename, typename = Void> class FSM, template<typename, typename, typename, typename...> class RM, typename F, typename... Args>
+    // FSM: Finite State Machine
+    // F: Function (target)
+    // Args: Arguments of target
+    template<template<typename, typename = Void> class FSM, typename F, typename... Args>
     inline void ObfuscatedCall(F f, Args&&... args)
     {
         using E = event<Void, F, Args&...>;
-        using M = msm::back::state_machine<FSM<E>>;
+        using M = msm::back::state_machine<FSM<E, Void>>;
+        using Run = typename FSM<E, Void>::template Run<F, Args...>;
         
         M machine;
-        RM<M, E, F, Args...>::apply(machine, f, std::forward<Args>(args)...);
+        Run::run(machine, f, std::forward<Args>(args)...);
+    };
+
+    // When function F is returning a value
+    // FSM: Finite State Machine
+    // R: Type of the returned value
+    // P: Predicate (functor)
+    // F: Function (target)
+    // Args: Arguments of target
+    template<template<typename, typename, typename> class FSM, typename R, typename P, typename F, typename... Args>
+    inline R ObfuscatedCallRetP(F f, Args&&... args)
+    {
+        using E = event<R, F, Args&...>;
+        using M = msm::back::state_machine<FSM<E, P, R>>;
+        using Run = typename FSM<E, P, R>::template Run<F, Args...>;
+        
+        M machine;
+        Run::run(machine, f, std::forward<Args>(args)...);
+        return machine.result_;
+    };
+    
+    // When function F is not returning a value
+    // FSM: Finite State Machine
+    // P: Predicate
+    // F: Function (target)
+    // Args: Arguments of target
+    template<template<typename, typename, typename = Void> class FSM, typename P, typename F, typename... Args>
+    inline void ObfuscatedCallP(F f, Args&&... args)
+    {
+        using E = event<Void, F, Args&...>;
+        using M = msm::back::state_machine<FSM<E, P, Void>>;
+        using Run = typename FSM<E, P, Void>::template Run<F, Args...>;
+        
+        M machine;
+        Run::run(machine, f, std::forward<Args>(args)...);
     };
     
     // Obfuscate the address of the target. Very simple implementation but enough to annoy IDA and Co.

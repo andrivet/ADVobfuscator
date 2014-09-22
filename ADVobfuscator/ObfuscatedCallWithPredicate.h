@@ -32,8 +32,9 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine2 {
     struct event1 {};
     struct event2 {};
     
-    // Our Finite State Machine
-    template<typename E, typename R = Void>
+    // Finite State Machine
+    // P: Predicate
+    template<typename E, typename P, typename R = Void>
     struct Machine : public msm::front::state_machine_def<Machine<E, R>>
     {
         // --- States
@@ -60,7 +61,7 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine2 {
             template<typename EVT, typename FSM, typename SRC, typename TGT>
             void operator()(EVT const& evt, FSM& fsm, SRC& src, TGT& tgt)
             {
-                fsm.predicateCounter_ += AmIBeingDebugged();
+                fsm.predicateCounter_ += P{}();
             }
         };
 
@@ -116,47 +117,52 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine2 {
         //  +---------+-------------+---------+---------------------+----------------------+
         > {};
         
+        using StateMachine = msm::back::state_machine<Machine<E, P, R>>;
+        
+        template<typename F, typename... Args>
+        struct Run
+        {
+            static inline void run(StateMachine& machine, F f, Args&&... args)
+            {
+                machine.start();
+                
+                machine.process_event(event1{});
+                
+                // Generate a lot of transitions (at least 19, at most 19 + 2 * 40)
+                // Important: This has to be an odd number to detect if the predicate is true or not
+                // This is computed at Compile-Time
+                Unroller<19 + 2 * MetaRandom<__COUNTER__, 40>::value>{}([&]()
+                {
+                    machine.process_event(event1{});
+                    machine.process_event(event1{});
+                });
+                
+                machine.process_event(event2{});
+                
+                // Call our target. Will be actually called only if predicate P is true
+                machine.process_event(E{f, args...});
+                
+                machine.process_event(event2{});
+                machine.process_event(event1{});
+            }
+        };
+        
+        
         // Result of the target
         R result_;
+        
+        // Counter to obfuscate predicate result
         static const int predicateCounterInit_ = 100 + MetaRandom<__COUNTER__, 999>::value;
         int predicateCounter_ = predicateCounterInit_;
-    };
-    
-    // It is not possible to use a template function as a template argument so use a metafunction class
-    template<typename M, typename E, typename F, typename... Args>
-    struct RunMachine
-    {
-        static inline void apply(M& machine, F f, Args&&... args)
-        {           
-            machine.start();
-            
-            machine.process_event(event1{});
-
-            // Generate a lot of transitions (at least 20, at most 40)
-            // This is computed at Compile-Time
-            Unroller<19 + 2 * MetaRandom<__COUNTER__, 40>::value>{}([&]()
-            {
-                machine.process_event(event1{});
-                machine.process_event(event1{});
-            });
-            
-            machine.process_event(event2{});
-            
-            // Call our target. Will be actually called only if predicate P is true
-            machine.process_event(E{f, args...});
-            
-            machine.process_event(event2{});
-            machine.process_event(event1{});
-        }
     };
     
 }}}
 
 // Warning: ##__VA_ARGS__ is not portable (only __VA_ARGS__ is). However, ##__VA_ARGS__ is far better (handles cases when it is empty) and supported by most compilers
 
-#define OBFUSCATED_CALL2(f, ...) ObfuscatedCall<andrivet::ADVobfuscator::Machine2::Machine, andrivet::ADVobfuscator::Machine2::RunMachine>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL2(P, f, ...) andrivet::ADVobfuscator::ObfuscatedCallP<andrivet::ADVobfuscator::Machine2::Machine, P>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
 
-#define OBFUSCATED_CALL_RET2(t, f, ...) ObfuscatedCallRet<andrivet::ADVobfuscator::Machine2::Machine, andrivet::ADVobfuscator::Machine2:RunMachine, t>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL_RET2(R, P, f, ...) andrivet::ADVobfuscator::ObfuscatedCallRetP<andrivet::ADVobfuscator::Machine2::Machine, P, R>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
 
 
 #endif

@@ -145,6 +145,8 @@ int SampleFiniteStateMachine_function_to_protect_with_parameter(const char* text
 // Obfuscate function calls
 void SampleFiniteStateMachine1()
 {
+    using namespace andrivet::ADVobfuscator::Machine1;
+    
     cout << "--------------------" << endl;
     cout << "Obfuscate calls by using a finite state machine" << endl;
     
@@ -161,6 +163,9 @@ void SampleFiniteStateMachine_important_function_in_the_application()
     cout << OBFUSCATED4("PRISM") << endl;
 }
 
+// Predicate
+struct DetectDebugger { bool operator()() { return AmIBeingDebugged(); } };
+
 // Obfuscate functions calls. Behaviour is dependend of a runtime value (debugger detected or not)
 void SampleFiniteStateMachine2()
 {
@@ -169,7 +174,7 @@ void SampleFiniteStateMachine2()
     
     cout << "Call a function without parameters and without returning a value" << endl;
     cout << "It will only be called if a debugger is NOT detected" << endl;
-    OBFUSCATED_CALL2(SampleFiniteStateMachine_important_function_in_the_application);
+    OBFUSCATED_CALL2(DetectDebugger, SampleFiniteStateMachine_important_function_in_the_application);
 }
 
 // Entry point
