@@ -36,7 +36,6 @@
 
 using namespace std;
 using namespace andrivet::ADVobfuscator;
-using namespace andrivet::ADVobfuscator::ADVfsm;
 
 // Demonstrate generation of Factorial at compile time
 void SampleFactorial()

@@ -28,8 +28,6 @@
 // In production, it would be better to put it in the middle of the FSM with some computing triggering it.
 
 namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
-
-    using namespace ADVfsm;
   
     // Events
     struct event1 {};

@@ -28,8 +28,6 @@
 
 namespace andrivet { namespace ADVobfuscator { namespace Machine2 {
     
-    using namespace ADVfsm;
-    
     // Events
     struct event1 {};
     struct event2 {};
