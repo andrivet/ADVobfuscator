@@ -49,12 +49,12 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
         struct Final  : public msm::front::state<>{};
         
         // Transition action. It will call our target
-        struct State5ToFinal
+        struct CallTarget
         {
             template<typename EVT, typename FSM, typename SRC, typename TGT>
             void operator()(EVT const& evt, FSM& fsm, SRC& src, TGT& tgt)
             {
-                LOG("State5ToFinal called");
+                LOG("CallTarget reached");
                 fsm.result_ = evt.call();
             }
         };
@@ -64,58 +64,60 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
         
         // Transition table
         struct transition_table : mpl::vector<
-            //    Start     Event         Next      Action               Guard
-            //  +---------+-------------+---------+---------------------+----------------------+
-            Row < State1  , event5      , State2                                               >,
-            Row < State1  , event1      , State3                                               >,
-            //  +---------+-------------+---------+---------------------+----------------------+
-            Row < State2  , event2      , State4                                               >,
-            //  +---------+-------------+---------+---------------------+----------------------+
-            Row < State3  , none        , State3                                               >,
-            //  +---------+-------------+---------+---------------------+----------------------+
-            Row < State4  , event4      , State1                                               >,
-            Row < State4  , event3      , State5                                               >,
-            //  +---------+-------------+---------+---------------------+----------------------+
-            Row < State5  , E           , Final,    State5ToFinal                              >
-            //  +---------+-------------+---------+---------------------+----------------------+
+        //    Start     Event         Next      Action               Guard
+        //  +---------+-------------+---------+---------------------+----------------------+
+        Row < State1  , event5      , State2                                               >,
+        Row < State1  , event1      , State3                                               >,
+        //  +---------+-------------+---------+---------------------+----------------------+
+        Row < State2  , event2      , State4                                               >,
+        //  +---------+-------------+---------+---------------------+----------------------+
+        Row < State3  , none        , State3                                               >,
+        //  +---------+-------------+---------+---------------------+----------------------+
+        Row < State4  , event4      , State1                                               >,
+        Row < State4  , event3      , State5                                               >,
+        //  +---------+-------------+---------+---------------------+----------------------+
+        Row < State5  , E           , Final,    CallTarget                                 >
+        //  +---------+-------------+---------+---------------------+----------------------+
         > {};
+        
+        using StateMachine = msm::back::state_machine<Machine<E, R>>;
+        
+        template<typename F, typename... Args>
+        struct Run
+        {
+            static inline void run(StateMachine& machine, F f, Args&&... args)
+            {
+                // This is just an example of what is possible. In actual production code it would be better to call event E in the middle of this loop and to make transitions more complex.
+                
+                machine.start();
+                
+                // Generate a lot of transitions (at least 55, at most 98)
+                Unroller<55 + MetaRandom<__COUNTER__, 44>::value>{}([&]()
+                {
+                    machine.process_event(event5{});
+                    machine.process_event(event2{});
+                    machine.process_event(event4{});
+                });
+                
+                machine.process_event(event5{});
+                machine.process_event(event2{});
+                machine.process_event(event3{});
+                // This will call our target. In actual production code it would be better to call event E in the middle of the FSM processing.
+                machine.process_event(E{f, args...});
+            }
+        };
         
         // Result of the target
         R result_;
-    };
-
-    // It is not possible to use a template function as a template argument so use a metafunction class
-    template<typename M, typename E, typename F, typename... Args>
-    struct RunMachine
-    {
-        static inline void apply(M& machine, F f, Args&&... args)
-        {
-            // This is just an example of what is possible. In actual production code it would be better to call event E in the middle of this loop and to make transitions more complex.
-                    
-            machine.start();
-            
-            // Generate a lot of transitions (at least 55, at most 98)
-            Unroller<55 + MetaRandom<__COUNTER__, 44>::value>{}([&]()
-            {
-                machine.process_event(event5{});
-                machine.process_event(event2{});
-                machine.process_event(event4{});
-            });
-            
-            machine.process_event(event5{});
-            machine.process_event(event2{});
-            machine.process_event(event3{});
-            // This will call our target. In actual production code it would be better to call event E in the middle of the FSM processing.
-            machine.process_event(E{f, args...});
-        }
     };
 
 }}}
 
 // Warning: ##__VA_ARGS__ is not portable (only __VA_ARGS__ is). However, ##__VA_ARGS__ is far better (handles cases when it is empty) and supported by most compilers
 
-#define OBFUSCATED_CALL1(f, ...) ObfuscatedCall<andrivet::ADVobfuscator::Machine1::Machine, andrivet::ADVobfuscator::Machine1::RunMachine>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
-#define OBFUSCATED_CALL_RET1(t, f, ...) ObfuscatedCallRet<andrivet::ADVobfuscator::Machine1::Machine, andrivet::ADVobfuscator::Machine1::RunMachine, t>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL1(f, ...) andrivet::ADVobfuscator::ObfuscatedCall<andrivet::ADVobfuscator::Machine1::Machine>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+
+#define OBFUSCATED_CALL_RET1(R, f, ...) andrivet::ADVobfuscator::ObfuscatedCallRet<andrivet::ADVobfuscator::Machine1::Machine, R>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
 
 
 #endif
