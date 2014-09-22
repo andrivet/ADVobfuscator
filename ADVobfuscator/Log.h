@@ -35,7 +35,7 @@ struct HexChar
 
 inline std::ostream& operator<<(std::ostream& o, const HexChar& c)
 {
-    return (o << std::setw(c.width_) << std::setfill('0') << std::hex << (int)c.c_);
+    return (o << std::setw(c.width_) << std::setfill('0') << std::hex << (int)c.c_ << std::dec);
 }
 
 inline HexChar hex(char c, int w = 2)
