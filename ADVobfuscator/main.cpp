@@ -166,7 +166,7 @@ void SampleFiniteStateMachine_important_function_in_the_application()
 // Predicate
 struct DetectDebugger { bool operator()() { return AmIBeingDebugged(); } };
 
-// Obfuscate functions calls. Behaviour is dependend of a runtime value (debugger detected or not)
+// Obfuscate functions calls. Behaviour is dependent of a runtime value (debugger detected or not)
 void SampleFiniteStateMachine2()
 {
     cout << "--------------------" << endl;

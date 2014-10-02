@@ -77,7 +77,7 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine2 {
         };
         
         // --- Guards
-        struct Debugged
+        struct Predicate
         {
             template<typename EVT, typename FSM, typename SRC, typename TGT>
             bool operator()(EVT const& evt, FSM& fsm, SRC& src, TGT& tgt)
@@ -86,12 +86,12 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine2 {
             }
         };
 
-        struct NotDebugged
+        struct NotPredicate
         {
             template<typename EVT, typename FSM, typename SRC, typename TGT>
             bool operator()(EVT const& evt, FSM& fsm, SRC& src, TGT& tgt)
             {
-                return !Debugged{}(evt, fsm, src, tgt);
+                return !Predicate{}(evt, fsm, src, tgt);
             }
         };
         
@@ -106,8 +106,8 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine2 {
         Row < State1  , E           , State5                                               >,
         //  +---------+-------------+---------+---------------------+----------------------+
         Row < State2  , event1      , State3  , CallPredicate                              >,
-        Row < State2  , event2      , State1  , none                , Debugged             >,
-        Row < State2  , event2      , State4  , none                , NotDebugged          >,
+        Row < State2  , event2      , State1  , none                , Predicate            >,
+        Row < State2  , event2      , State4  , none                , NotPredicate         >,
         //  +---------+-------------+---------+---------------------+----------------------+
         Row < State3  , event1      , State2  , Increment                                  >,
         //  +---------+-------------+---------+---------------------+----------------------+
