@@ -3,19 +3,30 @@ What is ADVobfuscator?
 
 ADVobfuscator demonstates how to use C++11 language to generate, at compile time, obfuscated code without using any external tool and without modifying the compiler. The technics presented rely only on C++11, as standardized by ISO. It shows also how to introduce some form of randomness to generate polymorphic code and it gives some concrete examples like the encryption of strings literals and the obfuscation of calls using finite state machines.
 
+News
+====
+
+ADVobfuscator code and whitepaper have been updated for BlackHat Europe 2014. It contains several improvements regarding obfuscation using finite state machines, combined with debugger detection (with an example of implementation for Mac OS X and iOS).
+
+
 Files
 =====
 
-- Indexes.h			Generate list of indexes at compile time (0, 1, 2, ... N)
-- MetaFactorial.h		Compute factorial at compile time
-- MetaFibonacci.h		Compute fibonacci sequence at compile time
-- MetaRandom.h		Generate a pseudo-random number at compile time
-- MetaString1.h		Obfuscated string - version 1
-- MetaString2.h		Obfuscated string - version 2 - Remove truncation
-- MetaString3.h		Obfuscated string - version 3 - Random key
-- MetaString4.h		Obfuscated string - version 4 - Random encryption algorithm
-- ObfuscatedCall.h	Obfuscate function call
-- main.cpp			Samples
+- DetectDebugger.cpp				Debugger detection, implemented for Mac OS X and iOS. It is used by ObfuscatedCallWithPredicate (FSM)
+- DetectDebugger.h					Debugger detection, declaration
+- Indexes.h							Generate list of indexes at compile time (0, 1, 2, ... N)
+- Log.h								Helper to log messages
+- MetaFactorial.h					Compute factorial at compile time
+- MetaFibonacci.h					Compute fibonacci sequence at compile time
+- MetaFSM.h							Template to generate Finite State Machines at compile time
+- MetaRandom.h						Generate a pseudo-random number at compile time
+- MetaString1.h						Obfuscated string - version 1
+- MetaString2.h						Obfuscated string - version 2 - Remove truncation
+- MetaString3.h						Obfuscated string - version 3 - Random key
+- MetaString4.h						Obfuscated string - version 4 - Random encryption algorithm
+- ObfuscatedCall.h					Obfuscate function call
+- ObfuscatedCallWithPredicate.h		Obfuscate function call, execute a FSM based on a predicate (such as DetectDebugger)
+- main.cpp							Samples
 
 
 Copyright and license
