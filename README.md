@@ -3,10 +3,20 @@ What is ADVobfuscator?
 
 ADVobfuscator demonstates how to use C++11 language to generate, at compile time, obfuscated code without using any external tool and without modifying the compiler. The technics presented rely only on C++11, as standardized by ISO. It shows also how to introduce some form of randomness to generate polymorphic code and it gives some concrete examples like the encryption of strings literals and the obfuscation of calls using finite state machines.
 
+
 News
 ====
 
-ADVobfuscator code and whitepaper have been updated for BlackHat Europe 2014. It contains several improvements regarding obfuscation using finite state machines, combined with debugger detection (with an example of implementation for Mac OS X and iOS).
+ADVobfuscator code and whitepaper have been updated for BlackHat Europe 2014. It contains several improvements regarding obfuscation using finite state machines, combined with debugger detection (with an example of implementation for Mac OS X and iOS). To install Boost, use your favorite package manager. For example:
+
+- Debian / Ubuntu: sudo apt-get install libboost-all-dev
+- Mac OS X:  brew install boost
+
+
+Prerequisites
+=============
+
+You have to install Boost library (www.boost.org) in order to use ADVdetector (it is used by FSM). Alternatively, you can comment out lines related to ObfuscatCall* (includes and code) in main.cpp.
 
 
 Files
@@ -27,6 +37,8 @@ Files
 - ObfuscatedCall.h					Obfuscate function call
 - ObfuscatedCallWithPredicate.h		Obfuscate function call, execute a FSM based on a predicate (such as DetectDebugger)
 - main.cpp							Samples
+- ADVobfuscator.xcodeproj			Project for Apple Xcode
+- CompileWithGcc.sh					Simple script to compile for GCC
 
 
 Copyright and license
