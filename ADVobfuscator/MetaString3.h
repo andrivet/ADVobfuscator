@@ -68,7 +68,8 @@ private:
 template<int N>
 struct MetaRandomChar3
 {
-    static const char value = static_cast<char>(1 + MetaRandom<N, 0xFF - 1>::value);
+	// Use 0x7F as maximum value since most of the time, char is signed (we have however 1 bit less of randomness)
+	static const char value = static_cast<char>(1 + MetaRandom<N, 0x7F - 1>::value);
 };
     
 }}

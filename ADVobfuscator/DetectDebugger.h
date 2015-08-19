@@ -15,7 +15,7 @@ bool AmIBeingDebugged();
 
 #else
 
-#pragma warning ("Only Apple platforms are implemented in this example. Other platforms are simulated (always debugged)")
+// Only Apple platforms are implemented in this example. Other platforms are simulated (always debugged)
 
 bool AmIBeingDebugged()
 {
