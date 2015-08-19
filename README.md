@@ -7,10 +7,7 @@ ADVobfuscator demonstates how to use C++11 language to generate, at compile time
 News
 ====
 
-ADVobfuscator code and whitepaper have been updated for BlackHat Europe 2014. It contains several improvements regarding obfuscation using finite state machines, combined with debugger detection (with an example of implementation for Mac OS X and iOS). To install Boost, use your favorite package manager. For example:
-
-- Debian / Ubuntu: sudo apt-get install libboost-all-dev
-- Mac OS X:  brew install boost
+ADVobfuscator code has been updated for Visual Studio 2015. ADVobfuscator is now compatible with the RTM release of Visual Studio 2015 (previous versions or CTP releases are not). The whitepaper is not yet updated. The code has also been modified in order to avoid problems with O3 optimization and GCC. GCC with O3 defeats obfuscation (because it optimizes too much) and sometimes generates wrong code (not clear yet if it is a bug in GCC or in ADVobfuscator).
 
 
 Prerequisites
@@ -18,6 +15,18 @@ Prerequisites
 
 You have to install Boost library (www.boost.org) in order to use ADVdetector (it is used by FSM). Alternatively, you can comment out lines related to ObfuscatCall* (includes and code) in main.cpp.
 
+- Debian / Ubuntu: sudo apt-get install libboost-all-dev
+- Mac OS X:  brew install boost
+
+Compatibility
+=============
+
+ADVobfuscator has been tested with:
+- Xcode (LLVM) 6.4 (7.0 beta is also working) under Mac OS X 10.10.4
+- GCC 4.9.2 under Debian 8.1 (jessie)
+- Visual Studio 2015 (14.0) under Windows 10
+
+Other compilers are probably compatible if they are C++11 compliant.
 
 Files
 =====
@@ -38,7 +47,8 @@ Files
 - ObfuscatedCallWithPredicate.h		Obfuscate function call, execute a FSM based on a predicate (such as DetectDebugger)
 - main.cpp							Samples
 - ADVobfuscator.xcodeproj			Project for Apple Xcode
-- CompileWithGcc.sh					Simple script to compile for GCC
+- Makefile							Simple makefile for GCC
+- ADVobfuscator.sln					Visual Studio 2015 Solution
 
 
 Copyright and license
@@ -46,7 +56,7 @@ Copyright and license
 
 Written by Sebastien Andrivet
 
-Copyright (c) 2010-2014 - Sebastien Andrivet
+Copyright (c) 2010-2015 - Sebastien Andrivet
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
