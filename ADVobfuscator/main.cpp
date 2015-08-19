@@ -2,7 +2,7 @@
 //  main.cpp
 //  ADVobfuscator
 //
-// Copyright (c) 2010-2014, Sebastien Andrivet
+// Copyright (c) 2010-2015, Sebastien Andrivet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,6 +21,14 @@
 #if !defined(DEBUG) || DEBUG == 0
 #define BOOST_DISABLE_ASSERTS
 #endif
+
+#if defined(__GNUC__)
+// GCC O3 is doing very strange things that are sometimes wrong or that remove the obfuscation. So use O2.
+#pragma GCC push_options
+#pragma GCC optimize("O2")
+#endif
+
+//#define ADVLOG 1
 
 #include <iostream>
 #include "MetaFactorial.h"
@@ -193,4 +201,8 @@ int main(int argc, const char * argv[])
     
     return 0;
 }
+
+#if defined(__GNUC__)
+#pragma GCC pop_options
+#endif
 
