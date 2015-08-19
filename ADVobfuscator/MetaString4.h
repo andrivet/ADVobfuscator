@@ -49,7 +49,7 @@ struct MetaString4<0, K, Indexes<I...>>
     : buffer_ {static_cast<char>(K), encrypt(str[I])...} { }
 
     // Runtime decryption. Most of the time, inlined
-    inline const char* decrypt()
+   inline const char* decrypt()
     {
         for(int i = 0; i < sizeof...(I); ++i)
             buffer_[i + 1] = decrypt(buffer_[i + 1]);
@@ -77,7 +77,7 @@ struct MetaString4<1, K, Indexes<I...>>
     // Constructor. Evaluated at compile time. Key is stored as the first element of the buffer
     constexpr ALWAYS_INLINE MetaString4(const char* str)
     : buffer_ {static_cast<char>(K), encrypt(str[I], I)...} { }
-    
+
     // Runtime decryption. Most of the time, inlined
     inline const char* decrypt()
     {
@@ -133,7 +133,7 @@ struct MetaRandomChar4
 {
     static const char value = static_cast<char>(1 + MetaRandom<N, 0xFF - 1>::value);
 };
-    
+
 }}
 
 // Prefix notation
