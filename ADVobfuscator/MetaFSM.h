@@ -148,10 +148,10 @@ namespace andrivet { namespace ADVobfuscator {
     template<typename F>
     struct ObfuscatedAddress
     {
-        unsigned long f_;
+        unsigned long long f_;
         int offset_;
         
-        constexpr ObfuscatedAddress(F f, int offset): f_{reinterpret_cast<unsigned long>(f) + offset}, offset_{offset} {}
+        constexpr ObfuscatedAddress(F f, int offset): f_{reinterpret_cast<unsigned long long>(f) + offset}, offset_{offset} {}
         constexpr F original() const { return reinterpret_cast<F>(f_ - offset_); }
     };
     
