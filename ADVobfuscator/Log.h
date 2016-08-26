@@ -21,6 +21,7 @@
 #define Log_h
 
 #include <iomanip>
+#include <iostream> // [fokede] mingw compatibility
 
 namespace andrivet { namespace ADVobfuscator {
     
