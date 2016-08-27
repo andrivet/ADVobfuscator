@@ -2,7 +2,7 @@
 //  MetaString4.h
 //  ADVobfuscator
 //
-// Copyright (c) 2010-2014, Sebastien Andrivet
+// Copyright (c) 2010-2016, Sebastien Andrivet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -35,23 +35,23 @@ namespace andrivet { namespace ADVobfuscator {
 
 // Represents an obfuscated string, parametrized with an alrorithm number N, a list of indexes Indexes and a key Key
 
-template<int N, int Key, typename Indexes>
+template<int N, char Key, typename Indexes>
 struct MetaString4;
 
 // Partial specialization with a list of indexes I, a key K and algorithm N = 0
 // Each character is encrypted (XOR) with the same key, stored at the beginning of the buffer
 
-template<int K, int... I>
+template<char K, int... I>
 struct MetaString4<0, K, Indexes<I...>>
 {
     // Constructor. Evaluated at compile time. Key is stored as the first element of the buffer
     constexpr ALWAYS_INLINE MetaString4(const char* str)
-    : buffer_ {static_cast<char>(K), encrypt(str[I])...} { }
+    : buffer_ {K, encrypt(str[I])...} { }
 
     // Runtime decryption. Most of the time, inlined
    inline const char* decrypt()
     {
-        for(int i = 0; i < sizeof...(I); ++i)
+        for(size_t i = 0; i < sizeof...(I); ++i)
             buffer_[i + 1] = decrypt(buffer_[i + 1]);
         buffer_[sizeof...(I) + 1] = 0;
         LOG("--- Select MetaString4 implementation #" << 0 << " with key 0x" << hex(buffer_[0]));
@@ -71,17 +71,17 @@ private:
 // Partial specialization with a list of indexes I, a key K and algorithm N = 1
 // Each character is encrypted (XOR) with an incremented key. The first key is stored at the beginning of the buffer
 
-template<int K, int... I>
+template<char K, int... I>
 struct MetaString4<1, K, Indexes<I...>>
 {
     // Constructor. Evaluated at compile time. Key is stored as the first element of the buffer
     constexpr ALWAYS_INLINE MetaString4(const char* str)
-    : buffer_ {static_cast<char>(K), encrypt(str[I], I)...} { }
+    : buffer_ {K, encrypt(str[I], I)...} { }
 
     // Runtime decryption. Most of the time, inlined
     inline const char* decrypt()
     {
-        for(int i = 0; i < sizeof...(I); ++i)
+        for(size_t i = 0; i < sizeof...(I); ++i)
             buffer_[i + 1] = decrypt(buffer_[i + 1], i);
         buffer_[sizeof...(I) + 1] = 0;
         LOG("--- Select MetaString4 implementation #" << 1 << " with key 0x" << hex(buffer_[0]));
@@ -90,9 +90,9 @@ struct MetaString4<1, K, Indexes<I...>>
     
 private:
     // Encrypt / decrypt a character of the original string with the key
-    constexpr char key(int position) const { return buffer_[0] + position; }
-    constexpr char encrypt(char c, int position) const { return c ^ key(position); }
-    constexpr char decrypt(char c, int position) const { return encrypt(c, position); }
+    constexpr char key(size_t position) const { return static_cast<char>(buffer_[0] + position); }
+    constexpr char encrypt(char c, size_t position) const { return c ^ key(position); }
+    constexpr char decrypt(char c, size_t position) const { return encrypt(c, position); }
     
     // Buffer to store the encrypted string + terminating null byte + key
     char buffer_[sizeof...(I) + 2];
@@ -101,7 +101,7 @@ private:
 // Partial specialization with a list of indexes I, a key K and algorithm N = 2
 // Shift the value of each character and does not store the key. It is only used at compile-time.
 
-template<int K, int... I>
+template<char K, int... I>
 struct MetaString4<2, K, Indexes<I...>>
 {
     // Constructor. Evaluated at compile time. Key is *not* stored
@@ -111,7 +111,7 @@ struct MetaString4<2, K, Indexes<I...>>
     // Runtime decryption. Most of the time, inlined
     inline const char* decrypt()
     {
-        for(int i = 0; i < sizeof...(I); ++i)
+        for(size_t i = 0; i < sizeof...(I); ++i)
             buffer_[i] = decrypt(buffer_[i]);
         LOG("--- Select MetaString4 implementation #" << 2 << " with key 0x" << hex(key(K)));
         return buffer_;
@@ -119,7 +119,7 @@ struct MetaString4<2, K, Indexes<I...>>
     
 private:
     // Encrypt / decrypt a character of the original string with the key
-    constexpr char key(int key) const { return key % 13; }
+    constexpr char key(char key) const { return key % 13; }
     constexpr char encrypt(char c) const { return c + key(K); }
     constexpr char decrypt(char c) const { return c - key(K); }
     

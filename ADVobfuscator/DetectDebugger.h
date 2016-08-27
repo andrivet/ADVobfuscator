@@ -15,11 +15,11 @@ bool AmIBeingDebugged();
 
 #else
 
-// Only Apple platforms are implemented in this example. Other platforms are simulated (always debugged)
+// Only Apple platforms are implemented in this example. Other platforms are simulated (not debugged)
 
 bool AmIBeingDebugged()
 {
-    return true;
+    return false;
 }
 
 #endif

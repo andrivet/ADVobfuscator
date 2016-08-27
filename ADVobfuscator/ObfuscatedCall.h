@@ -28,7 +28,7 @@
 // In production, it would be better to put it in the middle of the FSM with some computing triggering it.
 
 namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
-  
+
     // Finite State Machine
     // E: Event associated with target
     // R: Type of return value
@@ -41,7 +41,7 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
         struct event3 {};
         struct event4 {};
         struct event5 {};
-        
+
         // --- States
         struct State1 : public msm::front::state<>{};
         struct State2 : public msm::front::state<>{};
@@ -49,21 +49,21 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
         struct State4 : public msm::front::state<>{};
         struct State5 : public msm::front::state<>{};
         struct Final  : public msm::front::state<>{};
-        
+
         // --- Transitions
         struct CallTarget
         {
             template<typename EVT, typename FSM, typename SRC, typename TGT>
-            void operator()(EVT const& evt, FSM& fsm, SRC& src, TGT& tgt)
+            void operator()(EVT const& evt, FSM& fsm, SRC&, TGT&)
             {
                 LOG("CallTarget reached");
                 fsm.result_ = evt.call();
             }
         };
-        
+
         // --- Initial state of the FSM. Must be defined
         using initial_state = State1;
-        
+
         // --- Transition table
         struct transition_table : mpl::vector<
         //    Start     Event         Next      Action               Guard
@@ -81,18 +81,18 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
         Row < State5  , E           , Final,    CallTarget                                 >
         //  +---------+-------------+---------+---------------------+----------------------+
         > {};
-        
+
         using StateMachine = msm::back::state_machine<Machine<E, R>>;
-        
+
         template<typename F, typename... Args>
         struct Run
         {
             static inline void run(StateMachine& machine, F f, Args&&... args)
             {
                 // This is just an example of what is possible. In actual production code it would be better to call event E in the middle of this loop and to make transitions more complex.
-                
+
                 machine.start();
-                
+
                 // Generate a lot of transitions (at least 55, at most 98)
                 Unroller<55 + MetaRandom<__COUNTER__, 44>::value>{}([&]()
                 {
@@ -100,7 +100,7 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
                     machine.process_event(event2{});
                     machine.process_event(event4{});
                 });
-                
+
                 machine.process_event(event5{});
                 machine.process_event(event2{});
                 machine.process_event(event3{});
@@ -108,18 +108,27 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
                 machine.process_event(E{f, args...});
             }
         };
-        
+
         // Result of the target
         R result_;
     };
 
 }}}
 
-// Warning: ##__VA_ARGS__ is not portable (only __VA_ARGS__ is). However, ##__VA_ARGS__ is far better (handles cases when it is empty) and supported by most compilers
 
-#define OBFUSCATED_CALL(f, ...) andrivet::ADVobfuscator::ObfuscatedCall<andrivet::ADVobfuscator::Machine1::Machine>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#pragma warning(push)
+#pragma warning(disable : 4068)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 
-#define OBFUSCATED_CALL_RET(R, f, ...) andrivet::ADVobfuscator::ObfuscatedCallRet<andrivet::ADVobfuscator::Machine1::Machine, R>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL0(f) andrivet::ADVobfuscator::ObfuscatedCall<andrivet::ADVobfuscator::Machine1::Machine>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278))
+#define OBFUSCATED_CALL_RET0(R, f) andrivet::ADVobfuscator::ObfuscatedCallRet<andrivet::ADVobfuscator::Machine1::Machine, R>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278))
+
+#define OBFUSCATED_CALL(f, ...) andrivet::ADVobfuscator::ObfuscatedCall<andrivet::ADVobfuscator::Machine1::Machine>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), __VA_ARGS__)
+#define OBFUSCATED_CALL_RET(R, f, ...) andrivet::ADVobfuscator::ObfuscatedCallRet<andrivet::ADVobfuscator::Machine1::Machine, R>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), __VA_ARGS__)
+
+#pragma clang diagnostic pop
+#pragma warning(pop)
 
 
 #endif

@@ -42,7 +42,6 @@
 		BEF1E65019D0438000189A9D /* DetectDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetectDebugger.h; sourceTree = "<group>"; };
 		BEF1E65119D047DB00189A9D /* DetectDebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DetectDebugger.cpp; sourceTree = "<group>"; };
 		BEF1E65419D0499200189A9D /* ObfuscatedCallWithPredicate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObfuscatedCallWithPredicate.h; sourceTree = "<group>"; };
-		BEF8096A19580D0800A68C2B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +74,6 @@
 		BE9245B3193C727C00BBB60D /* ADVobfuscator */ = {
 			isa = PBXGroup;
 			children = (
-				BEF8096A19580D0800A68C2B /* .gitignore */,
 				BEF1E65119D047DB00189A9D /* DetectDebugger.cpp */,
 				BEF1E65019D0438000189A9D /* DetectDebugger.h */,
 				BE9245BD193C733100BBB60D /* Indexes.h */,

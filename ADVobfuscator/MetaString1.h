@@ -45,7 +45,7 @@ struct MetaString1
     // Runtime decryption. Most of the time, inlined
     inline const char* decrypt()
     {
-        for(int i = 0; i < sizeof...(I); ++i)
+        for(size_t i = 0; i < sizeof...(I); ++i)
             buffer_[i] = decrypt(buffer_[i]);
         buffer_[sizeof...(I)] = 0;
         return buffer_;

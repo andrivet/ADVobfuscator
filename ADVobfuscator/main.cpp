@@ -2,7 +2,7 @@
 //  main.cpp
 //  ADVobfuscator
 //
-// Copyright (c) 2010-2015, Sebastien Andrivet
+// Copyright (c) 2010-2016, Sebastien Andrivet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -27,6 +27,8 @@
 #pragma GCC push_options
 #pragma GCC optimize("O2")
 #endif
+
+#pragma warning(disable: 4503)
 
 //#define ADVLOG 1
 
@@ -133,7 +135,7 @@ void SampleEncryped4_differed()
     auto miley   = DEF_OBFUSCATED4("Miley Cyrus");
     auto britney = DEF_OBFUSCATED4("Britney Spears");
     auto katy    = DEF_OBFUSCATED4("Katy Perry");
-    
+
     cout << britney.decrypt() << endl;
     cout << katy.decrypt()    << endl;
     cout << miley.decrypt()   << endl;
@@ -142,25 +144,25 @@ void SampleEncryped4_differed()
 void SampleFiniteStateMachine_function_to_protect()
 {
     cout << OBFUSCATED4("Womenizer") << endl;
-};
+}
 
 int SampleFiniteStateMachine_function_to_protect_with_parameter(const char* text1, const char* text2)
 {
     cout << OBFUSCATED4("Oops I ") << text1 << OBFUSCATED4(" it ") << text2 << endl;
     return 12345;
-};
+}
 
 // Obfuscate function calls
 void SampleFiniteStateMachine1()
 {
     using namespace andrivet::ADVobfuscator::Machine1;
-    
+
     cout << "--------------------" << endl;
     cout << "Obfuscate calls by using a finite state machine" << endl;
-    
+
     cout << "Call a function without parameters and without returning a value" << endl;
-    OBFUSCATED_CALL(SampleFiniteStateMachine_function_to_protect);
-    
+    OBFUSCATED_CALL0(SampleFiniteStateMachine_function_to_protect);
+
     cout << "Call a function with a parameter and returning a value" << endl;
     auto result = OBFUSCATED_CALL_RET(int, SampleFiniteStateMachine_function_to_protect_with_parameter, OBFUSCATED4("did"), OBFUSCATED4("again"));
     cout << "Result: " << result << endl;
@@ -179,14 +181,14 @@ void SampleFiniteStateMachine2()
 {
     cout << "--------------------" << endl;
     cout << "Obfuscate calls by using a finite state machine and detect if a debugger is there or not" << endl;
-    
+
     cout << "Call a function without parameters and without returning a value" << endl;
     cout << "It will only be called if a debugger is NOT detected" << endl;
-    OBFUSCATED_CALL_P(DetectDebugger, SampleFiniteStateMachine_important_function_in_the_application);
+    OBFUSCATED_CALL_P0(DetectDebugger, SampleFiniteStateMachine_important_function_in_the_application);
 }
 
 // Entry point
-int main(int argc, const char * argv[])
+int main(int, const char *[])
 {
     SampleFactorial();
     SampleFibonacci();
@@ -198,11 +200,10 @@ int main(int argc, const char * argv[])
     SampleEncryped4_differed();
     SampleFiniteStateMachine1();
     SampleFiniteStateMachine2();
-    
+
     return 0;
 }
 
 #if defined(__GNUC__)
 #pragma GCC pop_options
 #endif
-
