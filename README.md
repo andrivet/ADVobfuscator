@@ -5,7 +5,7 @@ ADVobfuscator demonstates how to use C++11/14 language to generate, at compile t
 
 ADVobfuscator is delivered as a set of source file (source code library). You have to include them into your project and call the appropriate functions or macro. This is not a magic black box, some kind of proprocessor or anything like that.
 
-If you are looking for a more transparent obfuscator, look at [Obfuscator-LLVM](https://github.com/obfuscator-llvm/obfuscator/wiki) or [strong.codes](https://strong.codes) (commercial version of Obfuscator-LLVM. *Note: I have no affiliation with Obfuscator-LLVM and strong.codes. I just know some of these swiss folks.*
+If you are looking for a more transparent obfuscator, look at [Obfuscator-LLVM](https://github.com/obfuscator-llvm/obfuscator/wiki) or [strong.codes](https://strong.codes) (commercial version of Obfuscator-LLVM). *Note: I have no affiliation with Obfuscator-LLVM and strong.codes. I just know some of these swiss folks.*
 
 
 News
