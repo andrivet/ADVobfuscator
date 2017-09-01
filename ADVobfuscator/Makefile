@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS  = --std=c++11 -O2 -Wall -pedantic -Wextra -Wno-unknown-pragmas
+CFLAGS  = --std=c++14 -O3 -Wall -Wextra -Wno-unknown-pragmas
 
 TARGET = Sample
 SRCS = main.cpp DetectDebugger.cpp

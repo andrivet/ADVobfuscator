@@ -39,63 +39,63 @@ template<int N, char Key, typename Indexes>
 struct MetaString4;
 
 // Partial specialization with a list of indexes I, a key K and algorithm N = 0
-// Each character is encrypted (XOR) with the same key, stored at the beginning of the buffer
+// Each character is encrypted (XOR) with the same key
 
 template<char K, int... I>
 struct MetaString4<0, K, Indexes<I...>>
 {
-    // Constructor. Evaluated at compile time. Key is stored as the first element of the buffer
+    // Constructor. Evaluated at compile time.
     constexpr ALWAYS_INLINE MetaString4(const char* str)
-    : buffer_ {K, encrypt(str[I])...} { }
+  : key_{K}, buffer_ {encrypt(str[I], K)...} { }
 
     // Runtime decryption. Most of the time, inlined
    inline const char* decrypt()
     {
         for(size_t i = 0; i < sizeof...(I); ++i)
-            buffer_[i + 1] = decrypt(buffer_[i + 1]);
-        buffer_[sizeof...(I) + 1] = 0;
-        LOG("--- Select MetaString4 implementation #" << 0 << " with key 0x" << hex(buffer_[0]));
-        return buffer_ + 1;
+            buffer_[i] = decrypt(buffer_[i]);
+        buffer_[sizeof...(I)] = 0;
+        LOG("--- Select MetaString4 implementation #" << 0 << " with key 0x" << hex(key_));
+        return const_cast<const char*>(buffer_);
     }
 
 private:
     // Encrypt / decrypt a character of the original string with the key
-    constexpr char key() const { return buffer_[0]; }
-    constexpr char encrypt(char c) const { return c ^ key(); }
-    constexpr char decrypt(char c) const { return encrypt(c); }
+    constexpr char key() const { return key_; }
+    constexpr char ALWAYS_INLINE encrypt(char c, int k) const { return c ^ k; }
+    constexpr char decrypt(char c) const { return encrypt(c, key()); }
 
-    // Buffer to store the encrypted string + terminating null byte + key
-    char buffer_[sizeof...(I) + 2];
+  volatile int key_; // key. "volatile" is important to avoid uncontrolled over-optimization by the compiler
+    volatile char buffer_[sizeof...(I) + 1]; // Buffer to store the encrypted string + terminating null byte
 };
 
 // Partial specialization with a list of indexes I, a key K and algorithm N = 1
-// Each character is encrypted (XOR) with an incremented key. The first key is stored at the beginning of the buffer
+// Each character is encrypted (XOR) with an incremented key.
 
 template<char K, int... I>
 struct MetaString4<1, K, Indexes<I...>>
 {
-    // Constructor. Evaluated at compile time. Key is stored as the first element of the buffer
+    // Constructor. Evaluated at compile time.
     constexpr ALWAYS_INLINE MetaString4(const char* str)
-    : buffer_ {K, encrypt(str[I], I)...} { }
+    : key_(K), buffer_ {encrypt(str[I], I)...} { }
 
     // Runtime decryption. Most of the time, inlined
     inline const char* decrypt()
     {
         for(size_t i = 0; i < sizeof...(I); ++i)
-            buffer_[i + 1] = decrypt(buffer_[i + 1], i);
-        buffer_[sizeof...(I) + 1] = 0;
+            buffer_[i] = decrypt(buffer_[i], i);
+        buffer_[sizeof...(I)] = 0;
         LOG("--- Select MetaString4 implementation #" << 1 << " with key 0x" << hex(buffer_[0]));
-        return buffer_ + 1;
+        return const_cast<const char*>(buffer_);
     }
     
 private:
     // Encrypt / decrypt a character of the original string with the key
-    constexpr char key(size_t position) const { return static_cast<char>(buffer_[0] + position); }
-    constexpr char encrypt(char c, size_t position) const { return c ^ key(position); }
+    constexpr char key(size_t position) const { return static_cast<char>(key_ + position); }
+    constexpr char ALWAYS_INLINE encrypt(char c, size_t position) const { return c ^ key(position); }
     constexpr char decrypt(char c, size_t position) const { return encrypt(c, position); }
     
-    // Buffer to store the encrypted string + terminating null byte + key
-    char buffer_[sizeof...(I) + 2];
+  volatile int key_; // key. "volatile" is important to avoid uncontrolled over-optimization by the compiler
+  volatile char buffer_[sizeof...(I) + 1]; // Buffer to store the encrypted string + terminating null byte
 };
 
 // Partial specialization with a list of indexes I, a key K and algorithm N = 2
@@ -114,17 +114,17 @@ struct MetaString4<2, K, Indexes<I...>>
         for(size_t i = 0; i < sizeof...(I); ++i)
             buffer_[i] = decrypt(buffer_[i]);
         LOG("--- Select MetaString4 implementation #" << 2 << " with key 0x" << hex(key(K)));
-        return buffer_;
+        return const_cast<const char*>(buffer_);
     }
     
 private:
     // Encrypt / decrypt a character of the original string with the key
     constexpr char key(char key) const { return key % 13; }
-    constexpr char encrypt(char c) const { return c + key(K); }
+    constexpr char ALWAYS_INLINE encrypt(char c) const { return c + key(K); }
     constexpr char decrypt(char c) const { return c - key(K); }
     
     // Buffer to store the encrypted string + terminating null byte. Key is not stored
-    char buffer_[sizeof...(I) + 1];
+    volatile char buffer_[sizeof...(I) + 1];
 };
 
 // Helper to generate a key
@@ -134,11 +134,15 @@ struct MetaRandomChar4
 	// Use 0x7F as maximum value since most of the time, char is signed (we have however 1 bit less of randomness)
     static const char value = static_cast<char>(1 + MetaRandom<N, 0x7F - 1>::value);
 };
+  
 
 }}
 
 // Prefix notation
-#define DEF_OBFUSCATED4(str) MetaString4<andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 3>::value, andrivet::ADVobfuscator::MetaRandomChar4<__COUNTER__>::value, Make_Indexes<sizeof(str) - 1>::type>(str)
+//#define DEF_OBFUSCATED4(str) MetaString4<andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 3>::value, andrivet::ADVobfuscator::MetaRandomChar4<__COUNTER__>::value, Make_Indexes<sizeof(str) - 1>::type>(str)
+
+#define DEF_OBFUSCATED4(str) MetaString4<2, andrivet::ADVobfuscator::MetaRandomChar4<__COUNTER__>::value, Make_Indexes<sizeof(str) - 1>::type>(str)
+
 
 #define OBFUSCATED4(str) (DEF_OBFUSCATED4(str).decrypt())
 
