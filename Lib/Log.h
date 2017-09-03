@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  Log.h
 //  ADVobfuscator
 //
 // Copyright (c) 2010-2017, Sebastien Andrivet
@@ -17,50 +17,39 @@
 //
 // Get latest version on https://github.com/andrivet/ADVobfuscator
 
-// To remove Boost assert messages
-#if !defined(DEBUG) || DEBUG == 0
-#define BOOST_DISABLE_ASSERTS
+#ifndef Log_h
+#define Log_h
+
+#include <iomanip>
+#include <iostream> // [fokede] mingw compatibility
+
+namespace andrivet { namespace ADVobfuscator {
+
+// Inspired from work of Martin Stettner and Jimmy J
+
+struct HexChar
+{
+    unsigned char c_;
+    unsigned width_;
+    HexChar(unsigned char c, unsigned width) : c_{c}, width_{width} {}
+};
+
+inline std::ostream& operator<<(std::ostream& o, const HexChar& c)
+{
+    return (o << std::setw(c.width_) << std::setfill('0') << std::hex << (int)c.c_ << std::dec);
+}
+
+inline HexChar hex(char c, int w = 2)
+{
+    return HexChar(c, w);
+}
+
+}}
+
+#if (defined(DEBUG) && DEBUG == 1) || (defined(ADVLOG) && ADVLOG == 1)
+#define LOG(str) std::cerr << str << std::endl
+#else
+#define LOG(str) ((void)0)
 #endif
 
-#pragma warning(disable: 4503)
-
-#define ADVLOG 1
-
-#include <iostream>
-#include "Log.h"
-#include "MetaString.h"
-
-using namespace std;
-using namespace andrivet::ADVobfuscator;
-
-
-// Declare and use at the same time
-void SampleEncryped()
-{
-    cout << OBFUSCATED("Britney Spears") << endl;
-    cout << OBFUSCATED("Britney Spears") << endl;
-    cout << OBFUSCATED("Britney Spears") << endl;
-    cout << OBFUSCATED("Britney Spears") << endl;
-}
-
-// Declaration and usage are separated
-void SampleEncrypedDiffered()
-{
-    auto miley   = DEF_OBFUSCATED("Miley Cyrus");
-    auto britney = DEF_OBFUSCATED("Britney Spears");
-    auto katy    = DEF_OBFUSCATED("Katy Perry");
-
-    cout << britney.decrypt() << endl;
-    cout << katy.decrypt()    << endl;
-    cout << miley.decrypt()   << endl;
-}
-
-
-// Entry point
-int main(int, const char *[])
-{
-    SampleEncryped();
-    SampleEncrypedDiffered();
-
-    return 0;
-}
+#endif
