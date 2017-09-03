@@ -23,7 +23,7 @@
 #include "Inline.h"
 #include "Indexes.h"
 #include "MetaRandom.h"
-
+#include "Log.h"
 
 namespace andrivet { namespace ADVobfuscator {
 

@@ -36,7 +36,7 @@ Several enhancement (suppress warnings, fix some errors, enhance portability). I
 August 2015
 -----------
 
-ADVobfuscator code has been updated for Visual Studio 2015. ADVobfuscator is now compatible with the RTM release of Visual Studio 2015 (previous versions or CTP releases are not). The whitepaper is not yet updated. The code has also been modified in order to avoid problems with `O3` optimization and `GCC`. `GCC` with `O3` defeats obfuscation (because it optimizes too much) and sometimes generates wrong code (not clear yet if it is a bug in `GCC` or in **ADVobfuscator**).
+**ADVobfuscator** code has been updated for Visual Studio 2015. **ADVobfuscator** is now compatible with the RTM release of Visual Studio 2015 (previous versions or CTP releases are not). The whitepaper is not yet updated. The code has also been modified in order to avoid problems with `O3` optimization and `GCC`. `GCC` with `O3` defeats obfuscation (because it optimizes too much) and sometimes generates wrong code (not clear yet if it is a bug in `GCC` or in **ADVobfuscator**).
 
 
 How to use it?
@@ -62,21 +62,42 @@ You have to install the [Boost library](www.boost.org) in order to use some feat
 - Mac OS X: `brew install boost`
 - Windows: [Download Boost](http://www.boost.org/users/download/) and install it. Then you have to change the Visual Studio project to point to Boost
 
+Examples
+--------
+
+### Linux
+
+```
+cd Examples
+make
+```
+
+Each example is in its subdirectory.
+
+### macOS
+
+Open `ADVobfuscator.xcworkspace` and build each example.
+
+### Windows
+
+Open `ADVobfuscator.sln`. Be sure to change the path to `Boost` library for each project (Properties | C/C++ | General | Additional Include Directories).
+
+
 Debug Builds
 -------------
 
 Debug builds are very special: Compiler do not have (and do not most of the time) respect statement such as `inline` or `constexpr`. All optimizations are also, by default, disabled. Compilers are doing this for a good reason: let you debug, single step, etc.
 
-As a consequence, ADVobfuscator is **not** compatible with Debug builds. It works only for Release builds.
+As a consequence, **ADVobfuscator** is **not** compatible with Debug builds. It works only for Release builds.
 
 Compatibility
 =============
 
-ADVobfuscator has been tested with:
+**ADVobfuscator** has been tested with:
 
 * Xcode (LLVM) 8.1.0 under Mac OS X 10.12
-* GCC 6.1.1 under Debian testing
-* Visual Studio 2015 (Update 3) under Windows 10
+* GCC 7.2.0 under Debian 10 (buster - testing)
+* Visual Studio 2017 (15.3.3) under Windows 10
 * Boost 1.65.0
 
 Other compilers are probably compatible if they are `C++11/14` compliant.
@@ -143,6 +164,8 @@ Files and Folders
 | `DetectDebugger.h`              | Debugger detection, declaration |
 | `main.cpp`                      | Samples |
 | `Makefile`                      | Simple makefile for `GCC` |
+| `ADVobfuscator.sln`             | Visual Studio 2017 Solution |
+| `ADVobfuscator.xcworkspace`     | Xcode workspace |
 
 
 Copyright and license
