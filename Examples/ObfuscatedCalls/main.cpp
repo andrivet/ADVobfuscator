@@ -1,8 +1,8 @@
 //
-//  Log.h
+//  main.cpp
 //  ADVobfuscator
 //
-// Copyright (c) 2010-2014, Sebastien Andrivet
+// Copyright (c) 2010-2017, Sebastien Andrivet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -17,39 +17,49 @@
 //
 // Get latest version on https://github.com/andrivet/ADVobfuscator
 
-#ifndef Log_h
-#define Log_h
-
-#include <iomanip>
-#include <iostream> // [fokede] mingw compatibility
-
-namespace andrivet { namespace ADVobfuscator {
-    
-// Inspired from work of Martin Stettner and Jimmy J
-
-struct HexChar
-{
-    unsigned char c_;
-    unsigned width_;
-    HexChar(unsigned char c, unsigned width) : c_{c}, width_{width} {}
-};
-
-inline std::ostream& operator<<(std::ostream& o, const HexChar& c)
-{
-    return (o << std::setw(c.width_) << std::setfill('0') << std::hex << (int)c.c_ << std::dec);
-}
-
-inline HexChar hex(char c, int w = 2)
-{
-    return HexChar(c, w);
-}
-    
-}}
-
-#if (defined(DEBUG) && DEBUG == 1) || (defined(ADVLOG) && ADVLOG == 1)
-#define LOG(str) std::cerr << str << std::endl
-#else
-#define LOG(str) ((void)0)
+// To remove Boost assert messages
+#if !defined(DEBUG) || DEBUG == 0
+#define BOOST_DISABLE_ASSERTS
 #endif
 
-#endif
+#pragma warning(disable: 4503)
+
+
+#include <iostream>
+#include "MetaString.h"
+#include "ObfuscatedCall.h"
+#include "ObfuscatedCallWithPredicate.h"
+
+using namespace std;
+using namespace andrivet::ADVobfuscator;
+
+
+void FunctionToProtect()
+{
+    cout << OBFUSCATED("Womenizer") << endl;
+}
+
+int FunctionToProtectWithParameters(const char* text1, const char* text2)
+{
+    cout << OBFUSCATED("Oops I ") << text1 << OBFUSCATED(" it ") << text2 << endl;
+    return 12345;
+}
+
+// Obfuscate function calls
+void SampleFiniteStateMachine()
+{
+    using namespace andrivet::ADVobfuscator::Machine1;
+
+    OBFUSCATED_CALL0(FunctionToProtect);
+    auto result = OBFUSCATED_CALL_RET(int, FunctionToProtectWithParameters, OBFUSCATED("did"), OBFUSCATED("again"));
+    cout << "Result: " << result << endl;
+}
+
+
+// Entry point
+int main(int, const char *[])
+{
+    SampleFiniteStateMachine();
+
+    return 0;
+}

@@ -2,7 +2,7 @@
 //  MetaRandom.h
 //  ADVobfuscator
 //
-// Copyright (c) 2010-2014, Sebastien Andrivet
+// Copyright (c) 2010-2017, Sebastien Andrivet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -32,7 +32,7 @@ namespace andrivet { namespace ADVobfuscator {
 namespace
 {
     // I use current (compile time) as a seed
-  
+
     constexpr char time[] = __TIME__; // __TIME__ has the following format: hh:mm:ss in 24-hour time
 
     // Convert time string (hh:mm:ss) into a number
@@ -44,12 +44,12 @@ namespace
                      DigitToInt(time[1]) * 3600 +
                      DigitToInt(time[0]) * 36000;
 }
-    
+
 // 1988, Stephen Park and Keith Miller
 // "Random Number Generators: Good Ones Are Hard To Find", considered as "minimal standard"
 // Park-Miller 31 bit pseudo-random number generator, implemented with G. Carta's optimisation:
 // with 32-bit math and without division
-    
+
 template<int N>
 struct MetaRandomGenerator
 {
@@ -63,7 +63,7 @@ private:
     static constexpr unsigned lo2 = lo + ((hi & 0x7FFF) << 16);     // Combine lower 15 bits of hi with lo's upper bits
     static constexpr unsigned hi2 = hi >> 15;                       // Discard lower 15 bits of hi
     static constexpr unsigned lo3 = lo2 + hi;
-    
+
 public:
     static constexpr unsigned max = m;
     static constexpr unsigned value = lo3 > m ? lo3 - m : lo3;

@@ -1,7 +1,7 @@
 CC = g++
-CFLAGS  = --std=c++14 -O3 -Wall -Wextra -Wno-unknown-pragmas
+CFLAGS  = --std=c++11 -O3 -Wall -Wextra -Wno-unknown-pragmas -I../../Lib
 
-TARGET = Sample
+TARGET = Example
 SRCS = main.cpp DetectDebugger.cpp
 
 OBJS = $(SRCS:.cpp=.o)

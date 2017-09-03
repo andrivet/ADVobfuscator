@@ -1,8 +1,8 @@
 //
-//  Indexes.h
+//  main.cpp
 //  ADVobfuscator
 //
-// Copyright (c) 2010-2014, Sebastien Andrivet
+// Copyright (c) 2010-2017, Sebastien Andrivet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -17,23 +17,40 @@
 //
 // Get latest version on https://github.com/andrivet/ADVobfuscator
 
-#ifndef Indexes_h
-#define Indexes_h
-
-// std::index_sequence will be available with C++14 (C++1y). For the moment, implement a (very) simplified and partial version. You can find more complete versions on the Internet
-// MakeIndex<N>::type generates Indexes<0, 1, 2, 3, ..., N>
-
-namespace andrivet { namespace ADVobfuscator {
-
-template<int... I>
-struct Indexes { using type = Indexes<I..., sizeof...(I)>; };
-
-template<int N>
-struct Make_Indexes { using type = typename Make_Indexes<N-1>::type::type; };
-
-template<>
-struct Make_Indexes<0> { using type = Indexes<>; };
-
-}}
-
+// To remove Boost assert messages
+#if !defined(DEBUG) || DEBUG == 0
+#define BOOST_DISABLE_ASSERTS
 #endif
+
+#pragma warning(disable: 4503)
+
+#include <iostream>
+#include "MetaString.h"
+#include "DetectDebugger.h"
+#include "ObfuscatedCallWithPredicate.h"
+
+using namespace std;
+using namespace andrivet::ADVobfuscator;
+
+
+void ImportantFunctionInTheApplication()
+{
+    cout << OBFUSCATED("PRISM") << endl;
+}
+
+// Predicate
+struct DetectDebugger { bool operator()() { return AmIBeingDebugged(); } };
+
+// Obfuscate functions calls. Behaviour is dependent of a runtime value (debugger detected or not)
+// The function 'ImportantFunctionInTheApplication' will only be called if a debugger is NOT detected
+void SampleFiniteStateMachine()
+{
+    OBFUSCATED_CALL_P0(DetectDebugger, ImportantFunctionInTheApplication);
+}
+
+// Entry point
+int main(int, const char *[])
+{
+    SampleFiniteStateMachine();
+    return 0;
+}

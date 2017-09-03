@@ -1,8 +1,8 @@
 //
-//  Unroller.h
+//  Log.h
 //  ADVobfuscator
 //
-// Copyright (c) 2010-2014, Sebastien Andrivet
+// Copyright (c) 2010-2017, Sebastien Andrivet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -17,34 +17,39 @@
 //
 // Get latest version on https://github.com/andrivet/ADVobfuscator
 
-#ifndef Unroller_h
-#define Unroller_h
+#ifndef Log_h
+#define Log_h
 
-// Unroll a loop
+#include <iomanip>
+#include <iostream> // [fokede] mingw compatibility
 
 namespace andrivet { namespace ADVobfuscator {
 
-template <int N>
-struct Unroller
+// Inspired from work of Martin Stettner and Jimmy J
+
+struct HexChar
 {
-    template<typename F, typename... Args>
-    inline auto operator()(F&& f, Args&&... args) -> decltype(std::forward<F>(f)(std::forward<Args>(args)...))
-    {
-        Unroller<N-1>{}(std::forward<F>(f), std::forward<Args>(args)...);
-        return std::forward<F>(f)(std::forward<Args>(args)...);
-    }
+    unsigned char c_;
+    unsigned width_;
+    HexChar(unsigned char c, unsigned width) : c_{c}, width_{width} {}
 };
-    
-template <>
-struct Unroller<1>
+
+inline std::ostream& operator<<(std::ostream& o, const HexChar& c)
 {
-    template<typename F, typename... Args>
-    inline auto operator()(F&& f, Args&&... args) -> decltype(std::forward<F>(f)(std::forward<Args>(args)...))
-    {
-        return std::forward<F>(f)(std::forward<Args>(args)...);
-    }
-};
-    
+    return (o << std::setw(c.width_) << std::setfill('0') << std::hex << (int)c.c_ << std::dec);
+}
+
+inline HexChar hex(char c, int w = 2)
+{
+    return HexChar(c, w);
+}
+
 }}
+
+#if (defined(DEBUG) && DEBUG == 1) || (defined(ADVLOG) && ADVLOG == 1)
+#define LOG(str) std::cerr << str << std::endl
+#else
+#define LOG(str) ((void)0)
+#endif
 
 #endif

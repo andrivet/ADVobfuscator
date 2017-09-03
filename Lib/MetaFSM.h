@@ -2,7 +2,7 @@
 //  MetaFSM.h
 //  ADVobfuscator
 //
-// Copyright (c) 2010-2016, Sebastien Andrivet
+// Copyright (c) 2010-2017, Sebastien Andrivet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -34,7 +34,6 @@
 #pragma warning(pop)
 
 #include "Indexes.h"
-#include "Log.h"
 #include "Unroller.h"
 
 // Code common to our FSM (finite state machines)

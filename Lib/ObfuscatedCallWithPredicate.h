@@ -2,7 +2,7 @@
 //  ObfuscatedCallWithPredicate.h
 //  ADVobfuscator
 //
-// Copyright (c) 2010-2014, Sebastien Andrivet
+// Copyright (c) 2010-2017, Sebastien Andrivet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -20,8 +20,8 @@
 #ifndef ObfuscatedCallWithPredicate_h
 #define ObfuscatedCallWithPredicate_h
 
-
 #include "MetaFSM.h"
+#include "MetaRandom.h"
 
 // Obfuscate function call with a finite state machine (FSM).
 // In this example, the execution of the FSM is combined with the checking of a predicate (is a debugger present or not).

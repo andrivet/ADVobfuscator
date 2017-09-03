@@ -2,7 +2,7 @@
 //  ObfuscatedCall.h
 //  ADVobfuscator
 //
-// Copyright (c) 2010-2014, Sebastien Andrivet
+// Copyright (c) 2010-2017, Sebastien Andrivet
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,6 +21,7 @@
 #define ObfuscatedCall_h
 
 #include "MetaFSM.h"
+#include "MetaRandom.h"
 
 // Obfuscate function call with a finite state machine (FSM).
 // This is only a (simplified) example to show the principle
@@ -56,7 +57,6 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine1 {
             template<typename EVT, typename FSM, typename SRC, typename TGT>
             void operator()(EVT const& evt, FSM& fsm, SRC&, TGT&)
             {
-                LOG("CallTarget reached");
                 fsm.result_ = evt.call();
             }
         };
