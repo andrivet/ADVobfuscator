@@ -1,15 +1,18 @@
 What is ADVobfuscator?
 ======================
 
-**ADVobfuscator** demonstates how to use `C++11/14` language to generate, at compile time, obfuscated code without using any external tool and without modifying the compiler. The technics presented rely only on `C++11/14`, as standardized by ISO. It shows also how to introduce some form of randomness to generate polymorphic code and it gives some concrete examples like the encryption of strings literals and the obfuscation of calls using finite state machines.
+**ADVobfuscator** demonstates how to use `C++20` language to generate, at compile time, obfuscated code without using any external tool and without modifying the compiler. The technics presented rely only on `C++20`, as standardized by ISO. It shows also how to introduce some form of randomness to generate polymorphic code and it gives some concrete examples like the encryption of strings literals and the obfuscation of calls using finite state machines.
 
 **ADVobfuscator** is delivered as a set of source file (source code library). You have to include them into your project and call the appropriate functions or macro. This is not a magic black box or some kind of code pre-processor or post-processor. It has to be integrated manually into your source code.
-
-If you are looking for a more transparent obfuscator, look at [Obfuscator-LLVM](https://github.com/obfuscator-llvm/obfuscator/wiki) or [strong.codes](https://strong.codes) (commercial version of Obfuscator-LLVM). *Note: I have no affiliation with Obfuscator-LLVM and strong.codes. I just know some of those swiss folks.*
 
 
 News
 ====
+
+July 2025
+---------
+
+- A brand new implementation based on C++20, UDL (user-defined literals) and more.
 
 August 2017
 ------------
@@ -42,25 +45,16 @@ August 2015
 How to use it?
 ==============
 
-First you have to follow the requirements below. Then, you just have to include **ADVobfuscator** header files and use macros such as `OBFUSCATED` to protect your strings or function calls.
+First you have to follow the requirements below. Then, you just have to include **ADVobfuscator** header files and use UDL such as `_obf` or `_aes` to protect your strings.
 
-Look at the examples in the `Examples` folder.
+Look at the examples in the `examples` folder.
 
 Prerequisites
 --------------
 
-* A `C++11` or `C++14` compatible compiler (i.e. a compiler that is not too old)
-* **Obfuscated strings**: no other prerequisite
-* **Obfuscated calls and predicates**: You have to install the [Boost library](www.boost.org). See below
-
-Boost Library
--------------
-
-You have to install the [Boost library](www.boost.org) in order to use some features of **ADVdetector** (it is used by FSM). To install `Boost`:
-
-- Debian / Ubuntu: `sudo apt-get install libboost-all-dev`
-- Mac OS X: `brew install boost`
-- Windows: [Download Boost](http://www.boost.org/users/download/) and install it. Then you have to change the Visual Studio project to point to Boost
+* A `C++20` compatible compiler (i.e. a compiler that is not too old).
+* Supoort of the C++20 Standard Library.
+* no other prerequisite.
 
 Examples
 --------
