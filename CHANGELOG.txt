@@ -1,0 +1,32 @@
+July 2025
+---------
+
+- A brand new implementation based on C++20, UDL (user-defined literals) and more.
+
+August 2017
+------------
+
+- Enhance the compatibility with compiler's optimizer (such as `GCC` with `O3`). Previously, the code was sometimes overoptimized by the compiler and as a consequence, non-obfuscated strings remains in the binary code. This was more or less due to a bug in **ADVobfuscator** (I was not using `volatile`).
+- Fix a stupid mistake in algorithm #2 (shift). Sometimes, the encryption key is 0.
+- Clearly seperate the library code (under `Lib`) from the examples (under `Examples` and `DocCode`).
+- Check the compatibility with `C++14`. In the future, I will probably drop the support of `C++11` and keep only `C++14` and `C++17` compatibility.
+
+August 2016
+-----------
+
+Several enhancement (suppress warnings, fix some errors, enhance portability). In more details:
+
+- Increase the warning level for Visual Studio and GCC
+- Remove several (all) compilation warnings
+- Replace `int` by `size_t` when it is appropriate (`sizeof`, `position`)
+- Remove unused parameters
+- Keys are now of type `char` (were of type `int`, it was wrong)
+- Replace the non-portable `##__VA_ARGS__` by the portable `__VA_ARGS__`. As a consequence, new macros (ending with `0`) are defined when there are no parameters
+- Remove some (stupid) syntax errors (`;` at the end of some functions). C/C++ is odd: you have to put a `;` when you define a `struct`, but none when you define a function
+- A integral type is computed at compile time to store pointers to functions
+
+August 2015
+-----------
+
+**ADVobfuscator** code has been updated for Visual Studio 2015. **ADVobfuscator** is now compatible with the RTM release of Visual Studio 2015 (previous versions or CTP releases are not). The whitepaper is not yet updated. The code has also been modified in order to avoid problems with `O3` optimization and `GCC`. `GCC` with `O3` defeats obfuscation (because it optimizes too much) and sometimes generates wrong code (not clear yet if it is a bug in `GCC` or in **ADVobfuscator**).
+
