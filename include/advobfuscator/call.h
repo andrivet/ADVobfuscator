@@ -28,6 +28,7 @@
 #ifndef ADVOBFUSCATOR_CALL_H
 #define ADVOBFUSCATOR_CALL_H
 
+#include <functional>
 #include "fsm.h"
 
 namespace andrivet::advobfuscator {
