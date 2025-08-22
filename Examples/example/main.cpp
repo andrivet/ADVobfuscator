@@ -150,14 +150,14 @@ void to_protect2() {
 void obfuscate_call1() {
   using namespace std::string_literals;
 
-  constexpr auto random = call::generate_random(__LINE__);
+  constexpr auto random = call::generate_random(42);
   const ObfuscatedCall call{random, &to_protect1};
   const auto ret = call(random, "hello"s, 42);
   std::cout << "Returned value: " << ret << '\n';
 }
 
 void obfuscate_call2() {
-  constexpr auto random = call::generate_random(__LINE__);
+  constexpr auto random = call::generate_random(43);
   const ObfuscatedCall call{random, &to_protect2};
   call(random);
 }
@@ -169,7 +169,7 @@ struct S1 {
 void obfuscate_method_call() {
   S1 s1{};
 
-  constexpr auto random = call::generate_random(__LINE__);
+  constexpr auto random = call::generate_random(44);
   const ObfuscatedMethodCall call{random, &S1::method1};
   call(random, s1);
 }

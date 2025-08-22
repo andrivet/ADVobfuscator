@@ -77,7 +77,7 @@ namespace andrivet::advobfuscator {
     consteval Fsm(std::uint32_t recognize, O o) {
       // Get a random number for the activate transition of the recognizer.
       // The activate transition is the transition that stores the object.
-      const std::uint32_t activate = generate_random_not_0(recognize % 1000, NB_BITS - 1);
+      const std::uint32_t activate = generate_random_not_0<uint32_t>(recognize % 1000, NB_BITS - 1);
       auto bits = details::num_bits(recognize);
 
       // For each bit...
