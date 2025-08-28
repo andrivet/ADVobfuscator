@@ -1,9 +1,11 @@
 What is ADVobfuscator?
 ======================
 
-**ADVobfuscator** demonstrates how to use the `C++20` language to generate, at compile time, obfuscated code without using any external tool and without modifying the compiler. The techniques presented rely only on `C++20`, as standardized by ISO. It also shows how to introduce some form of randomness to generate polymorphic code, and it gives some concrete examples like the encryption of string literals and the obfuscation of calls using finite state machines.
+**ADVobfuscator** demonstrates how to use the `C++20` language to generate, at compile time, obfuscated data and code without using any external tool and without modifying the compiler. 
+The techniques presented rely only on `C++20`, as standardized by ISO. 
+It also shows how to introduce some form of randomness to generate polymorphic code, and it gives some concrete examples like the encryption of string literals and the obfuscation of calls using finite state machines.
 
-**ADVobfuscator** is delivered as a set of source files (source code library). You have to include them in your project and call the appropriate functions or macro. This is not a magic black box or some kind of code pre-processor or post-processor. It has to be integrated manually into your source code.
+**ADVobfuscator** is delivered as a set of header files. You have to include them in your project and call the appropriate functions.
 
 
 How to use it?
@@ -13,8 +15,8 @@ First, you have to follow the requirements below. Then, you just have to include
 
 Look at the examples in the `examples` folder.
 
-Prerequisites
---------------
+Requirements
+------------
 
 * A `C++20` compatible compiler (i.e. a compiler that is not too old).
 * Support of the C++20 Standard Library. It is generally the case if your compiler supports C++20. There are however exceptions, especially for embedded environments.
@@ -70,24 +72,24 @@ Other compilers are probably compatible if they are `C++20` compliant.
 Files and Folders
 =================
 
-| Files and Folders           | Description |
-|-----------------------------|-------------|
-| `README.md`                 | This file |
-| `include/advobfuscator`     | **ADVobfuscator** library |
+| Files and Folders           | Description                         |
+|-----------------------------|-------------------------------------|
+| `README.md`                 | This file                           |
+| `include/advobfuscator`     | **ADVobfuscator** library           |
 | `Examples`                  | Examples of using **ADVobfuscator** |
 
 ### Lib
 
-| Files          | Description                                                  |
-|----------------|--------------------------------------------------------------|
-| `aes.h`        | Obfuscation using AES-128 compile time encryption            |
-| `aes_string.h` | Obfuscated strings using AES-128 compile time encryption     |
-| `bytes.h`      | Obfuscated blocks of bytes                                   |
-| `fsm.h`        | Compile time finite state machine to obfuscate function calls |
-| `obj.h`        | Obfuscation                                                  |
-| `random.h`     | Generate random numbers at compile time                      |
-| `string.h`     | Obfuscated strings                                           |
-| `format.h`     | std::format Formatting of strings                  |
+| Files          | Description                                                    |
+|----------------|----------------------------------------------------------------|
+| `aes.h`        | Obfuscation using AES-128 compile time encryption              |
+| `aes_string.h` | Obfuscated strings using AES-128 compile time encryption       |
+| `bytes.h`      | Obfuscated blocks of bytes                                     |
+| `fsm.h`        | Compile time finite state machine to obfuscate function calls  |
+| `obj.h`        | Obfuscation                                                    |
+| `random.h`     | Generate random numbers at compile time                        |
+| `string.h`     | Obfuscated strings                                             |
+| `format.h`     | std::format Formatting of strings                              |
 
 
 Copyright and license
