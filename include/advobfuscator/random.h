@@ -80,7 +80,7 @@ namespace andrivet::advobfuscator {
 
   /// Generate a (pseudo) random number strictly greater than 0.
   /// \tparam T Type of the number to generate (std::size_t by default).
-  /// \param counter Randomization counter.
+  /// \param count Randomization counter.
   /// \param max The maximum value of the number generated (excluded).
   template<typename T = std::size_t>
   consteval T generate_random_not_0(std::size_t count, T max) {
@@ -89,7 +89,7 @@ namespace andrivet::advobfuscator {
 
   /// Generate a (pseudo) random number in a range.
   /// \tparam T Type of the number to generate (std::size_t by default).
-  /// \param counter Randomization counter.
+  /// \param count Randomization counter.
   /// \param max The maximum value of the number generated (excluded).
   template<typename T = std::size_t>
   consteval T generate_random(std::size_t count, T min, T max) {
@@ -98,7 +98,7 @@ namespace andrivet::advobfuscator {
 
   /// Generate a (pseudo) random number in a range (0 included).
   /// \tparam T Type of the number to generate (std::size_t by default).
-  /// \param counter Randomization counter.
+  /// \param count Randomization counter.
   /// \param max The maximum value of the number generated (excluded).
   template<typename T = std::size_t>
   consteval T generate_random(std::size_t count, T max) {
@@ -107,7 +107,7 @@ namespace andrivet::advobfuscator {
 
   /// Generate block of (pseudo) random numbers.
   /// \tparam N The size of the block of numbers.
-  /// \param counter Randomization counter.
+  /// \param count Randomization counter.
   /// \return An array of (pseudo) random numbers.
   template<std::size_t N>
   consteval std::array<std::uint8_t, N> generate_random_block(std::size_t count) {

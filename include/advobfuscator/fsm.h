@@ -34,9 +34,9 @@
 
 namespace andrivet::advobfuscator {
 
-  constexpr size_t NB_BITS = 32; //< Number of bits recognized.
-  constexpr size_t TRANSITIONS_PER_BIT = 8; //< Number of transitions per bit.
-  constexpr size_t MAX_TRANSITIONS = NB_BITS * TRANSITIONS_PER_BIT; //< Total number of transitions.
+  constexpr size_t NB_BITS = 32; ///< Number of bits recognized.
+  constexpr size_t TRANSITIONS_PER_BIT = 8; ///< Number of transitions per bit.
+  constexpr size_t MAX_TRANSITIONS = NB_BITS * TRANSITIONS_PER_BIT; ///< Total number of transitions.
 
   // For each bit to recognize, we create a small FSM of 4 states and 8 transitions.
   // - The first transition moves the recognizer to the next state.
