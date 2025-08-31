@@ -91,7 +91,7 @@ void blocks_obfuscation() {
 
   for(const auto &box : sbox) {
     // This is not permitted since data() modifies the object (non-const)
-    // std::cout << hexdump32(i.data(), 16);
+    // std::cout << hexdump32(box.data(), 16);
     // So use decode() instead:
     const auto &decoded = box.decode();
     for(const auto &i : decoded)
