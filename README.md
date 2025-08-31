@@ -1,19 +1,18 @@
 What is ADVobfuscator?
 ======================
 
-**ADVobfuscator** demonstrates how to use the `C++20` language to generate, at compile time, obfuscated data and code without using any external tool and without modifying the compiler. 
-The techniques presented rely only on `C++20`, as standardized by ISO. 
-It also shows how to introduce some form of randomness to generate polymorphic code, and it gives some concrete examples like the encryption of string literals and the obfuscation of calls using finite state machines.
+![](docs/images/Logo-128x128.png)
 
-**ADVobfuscator** is delivered as a set of header files. You have to include them in your project and call the appropriate functions.
+**ADVobfuscator** is a library that uses the `C++20` language to generate, at compile time, obfuscated data and code without using any external tool and without modifying the compiler.
+Strings or blocks of data can be obfuscated or encrypted at compile time, and they are decoded at runtime:
 
 
 How to use it?
 ==============
 
-First, you have to follow the requirements below. Then, you just have to include **ADVobfuscator** header files and use UDL such as `_obf` or `_aes` to protect your strings.
+The [documentation](https://andrivet.github.io/advobfuscator/) explains how to install and use **ADVobfuscator**.
 
-Look at the examples in the `examples` folder.
+Look also at the examples in the `Examples` folder.
 
 Requirements
 ------------
