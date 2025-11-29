@@ -390,7 +390,7 @@ namespace andrivet::advobfuscator {
   /// \param block bytes to be decrypted with AES.
   /// \param key AES key.
   /// \return The decrypted block.
-  [[nodiscard]] Block decrypt(const Block &block, const Key &key) {
+  [[nodiscard]] inline Block decrypt(const Block &block, const Key &key) {
     using namespace details;
     const auto ekey = key_expansion(key);
 
@@ -434,7 +434,7 @@ namespace andrivet::advobfuscator {
   /// \param data bytes to be decrypted with AES. The number of bytes does not need to be a multiple of 128.
   /// \param key AES key.
   /// \param nonce The random nonce to initialize the stream.
-  void decrypt_ctr(Byte *data, size_t size, const Key &key, const Nonce &nonce) {
+  inline void decrypt_ctr(Byte *data, size_t size, const Key &key, const Nonce &nonce) {
     Block ctr{
         nonce[0], nonce[1], nonce[2], nonce[3], nonce[4], nonce[5], nonce[6], nonce[7],
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
