@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(advobfuscator VERSION 2.0.0 LANGUAGES CXX)
+project(advobfuscator VERSION 2.1.0 LANGUAGES CXX)
 
 option(BUILD_TESTING "Build unit tests" ON)
 option(BUILD_EXAMPLES "Build examples" ON)
