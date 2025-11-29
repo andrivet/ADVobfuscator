@@ -27,26 +27,26 @@ Examples
 ### Linux and macOS (CMake)
 
 ```
-cd Examples
 mkdir -p BUILD
 cd BUILD
 cmake ..
 cmake --build .
 ```
 
-Each example is in its subdirectory.
+Each example is in its subdirectory. For example `./example/demo`.
 
 ### Windows (Visual Studio 22)
 
 Open `ADVobfuscator.sln`.
-
 
 Debug Builds
 -------------
 
 Debug builds are very special: Compiler do not have (and do not most of the time) respect statements such as `inline` or `constexpr`. All optimizations are also, by default, disabled. Compilers are doing this for a good reason: let you debug, single step, etc.
 
-As a consequence, **ADVobfuscator** is **not** compatible with Debug builds. It works only for Release builds.
+As a consequence, **ADVobfuscator** is **not** compatible with Debug builds.
+You can compile in Debug but in this case, the strings or data will not be obfuscated.
+Obfuscation works only for Release builds.
 
 Compatibility
 =============
