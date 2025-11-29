@@ -103,7 +103,8 @@ namespace andrivet::advobfuscator {
   private:
     /// Erase the data of the string.
     constexpr void erase() noexcept {
-      std::fill(data_.begin(), data_.end(), 0);
+      if(!obfuscated_)
+        std::fill(data_.begin(), data_.end(), 0);
     }
 
     /// Encode an array of characters.
@@ -126,9 +127,10 @@ namespace andrivet::advobfuscator {
     }
   };
 
-  // User-defined literal "_obf"
+  /// User-defined literal "_obf"
   template<ObfuscatedString str>
   consteval auto operator ""_obf() { return str; }
+
 }
 
 #endif

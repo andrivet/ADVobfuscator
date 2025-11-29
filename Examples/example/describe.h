@@ -59,6 +59,7 @@ inline void describe(andrivet::advobfuscator::DataAlgorithm algo) {
 template<std::size_t N>
 void describe(const andrivet::advobfuscator::ObfuscatedString<N> &str, bool raw = true) {
   using namespace andrivet::advobfuscator;
+  std::cout << "Obfuscated: " << (str.obfuscated_ ? "Yes" : "No") << '\n';
   std::cout << "Algorithms: ";
   for(unsigned i = 0; i < details::MAX_NB_ALGORITHMS; ++i) {
     const auto algo = str.algos_[i];

@@ -36,22 +36,22 @@ namespace andrivet::advobfuscator {
 
   /// Algorithms to encode data
   enum class DataAlgorithm {
-    IDENTITY,   //< Identity function, i.e. no change.
-    CAESAR,     //< Caesar algorithm, key is the displacement.
-    XOR,        //< XOR with the key.
-    ROTATE,     //< Bits rotation, key is the displacement.
-    SUBSTITUTE, //< Substitute bits, key % 8 is the displacement.
-    NB_VALUES   //< Number of values in this enum.
+    IDENTITY,   ///< Identity function, i.e. no change.
+    CAESAR,     ///< Caesar algorithm, key is the displacement.
+    XOR,        ///< XOR with the key.
+    ROTATE,     ///< Bits rotation, key is the displacement.
+    SUBSTITUTE, ///< Substitute bits, key % 8 is the displacement.
+    NB_VALUES   ///< Number of values in this enum.
   };
 
   /// Algorithms to encode a key from a previous one
   enum class KeyAlgorithm {
-    IDENTITY,   //< Identity function, i.e. no change.
-    INCREMENT,  //< Key is incremented at each step.
-    INVERT,     //< Key is inverted at each step.
-    SUBSTITUTE, //< Substitute bits (0 becomes 7, 7 becomes 0, ...) at each step.
-    SWAP,       //< Swap high and low nibbles at each step.
-    NB_VALUES   //< Number of values in this enum.
+    IDENTITY,   ///< Identity function, i.e. no change.
+    INCREMENT,  ///< Key is incremented at each step.
+    INVERT,     ///< Key is inverted at each step.
+    SUBSTITUTE, ///< Substitute bits (0 becomes 7, 7 becomes 0, ...) at each step.
+    SWAP,       ///< Swap high and low nibbles at each step.
+    NB_VALUES   ///< Number of values in this enum.
   };
 
   /// Parameters of an obfuscation algorithm.
@@ -138,7 +138,7 @@ namespace andrivet::advobfuscator {
     /// Swap nibbles in a byte.
     /// \result The result of the swapping.
     constexpr uint8_t swap(uint8_t b) {
-        return (b & 0xF0 >> 4) | (b & 0x0F << 4);
+        return ((b & 0xF0) >> 4) | ((b & 0x0F) << 4);
     }
   }
 
@@ -270,7 +270,6 @@ namespace andrivet::advobfuscator {
     make_algorithm(const Parameters &params) { return Obfuscation{params}; }
 
     /// Construct a set of obfuscations.
-    /// \param params I Number of actual obfuscations to generate (others will be identity).
     /// \param counter Randomization counter.
     /// \param nb_algorithms Number of obfuscations to generate.
     template<std::size_t... I>
@@ -280,8 +279,6 @@ namespace andrivet::advobfuscator {
     }
 
     /// Construct a set of obfuscations.
-    /// \param params I Number of actual obfuscations to generate (others will be identity).
-    /// \param A Size of the array of parameters.
     /// \param params Array of parameters for the obfuscation (key and algorithms).
     template<std::size_t A, std::size_t... I>
     consteval std::array<Obfuscation, sizeof...(I)>
@@ -301,13 +298,12 @@ namespace andrivet::advobfuscator {
         std::make_index_sequence<details::MAX_NB_ALGORITHMS>{}
     )} {}
 
-    /// Construct a set of one obfuscations with explicit parameters.
+    /// Construct a set of obfuscations with explicit parameters.
     /// \param params Parameters for the obfuscation (key and algorithms).
     consteval explicit Obfuscations(const Parameters &params) noexcept
     : algos_{details::make_algorithm(params)} {}
 
     /// Construct a set of obfuscations with explicit parameters.
-    /// \param A Size of the array of parameters.
     /// \param params Array of parameters for the obfuscation (key and algorithms).
     template<std::size_t A>
     consteval explicit Obfuscations(const Parameters (&params)[A]) noexcept

@@ -60,54 +60,54 @@ namespace andrivet::advobfuscator {
     /// with 32-bit math and without division
     template<typename T = std::size_t>
     consteval T generate_random(std::size_t count, T max) {
-      const unsigned a = 16807;        // 7^5
-      const unsigned m = 2147483647;   // 2^31 - 1
+      const uint32_t a = 16807;        // 7^5
+      const uint32_t m = 2147483647;   // 2^31 - 1
 
       auto s = seed;
       while(count-- > 0) {
-        unsigned lo = a * (s & 0xFFFF);                // Multiply lower 16 bits by 16807
-        unsigned hi = a * (s >> 16);                   // Multiply higher 16 bits by 16807
-        unsigned lo2 = lo + ((hi & 0x7FFF) << 16);     // Combine lower 15 bits of hi with lo's upper bits
-        unsigned lo3 = lo2 + hi;
+        uint32_t lo = a * (s & 0xFFFF);                // Multiply lower 16 bits by 16807
+        uint32_t hi = a * (s >> 16);                   // Multiply higher 16 bits by 16807
+        uint32_t lo2 = lo + ((hi & 0x7FFF) << 16);     // Combine lower 15 bits of hi with lo's upper bits
+        uint32_t lo3 = lo2 + hi;
         s = lo3 > m ? lo3 - m : lo3;
       }
 
       // Note: A bias is introduced by the modulo operation.
       // However, I do believe it is negligible in this case (M is far lower than 2^31 - 1)
-      return static_cast<T>(s % static_cast<unsigned>(max));
+      return static_cast<T>(s % static_cast<uint32_t>(max));
     }
   }
 
   /// Generate a (pseudo) random number strictly greater than 0.
   /// \tparam T Type of the number to generate (std::size_t by default).
-  /// \param counter Randomization counter.
+  /// \param count Randomization counter.
   /// \param max The maximum value of the number generated (excluded).
   template<typename T = std::size_t>
   consteval T generate_random_not_0(std::size_t count, T max) {
-    return static_cast<T>(details::generate_random(count, static_cast<unsigned>(max) - 1) + 1);
+    return static_cast<T>(details::generate_random(count, static_cast<uint32_t>(max) - 1) + 1);
   }
 
   /// Generate a (pseudo) random number in a range.
   /// \tparam T Type of the number to generate (std::size_t by default).
-  /// \param counter Randomization counter.
+  /// \param count Randomization counter.
   /// \param max The maximum value of the number generated (excluded).
   template<typename T = std::size_t>
   consteval T generate_random(std::size_t count, T min, T max) {
-    return static_cast<T>(details::generate_random(count, static_cast<unsigned>(max) - static_cast<unsigned>(min)) + static_cast<unsigned>(min));
+    return static_cast<T>(details::generate_random(count, static_cast<uint32_t>(max) - static_cast<uint32_t>(min)) + static_cast<unsigned>(min));
   }
 
   /// Generate a (pseudo) random number in a range (0 included).
   /// \tparam T Type of the number to generate (std::size_t by default).
-  /// \param counter Randomization counter.
+  /// \param count Randomization counter.
   /// \param max The maximum value of the number generated (excluded).
   template<typename T = std::size_t>
   consteval T generate_random(std::size_t count, T max) {
-    return static_cast<T>(details::generate_random(count, static_cast<unsigned>(max)));
+    return static_cast<T>(details::generate_random(count, static_cast<uint32_t>(max)));
   }
 
   /// Generate block of (pseudo) random numbers.
   /// \tparam N The size of the block of numbers.
-  /// \param counter Randomization counter.
+  /// \param count Randomization counter.
   /// \return An array of (pseudo) random numbers.
   template<std::size_t N>
   consteval std::array<std::uint8_t, N> generate_random_block(std::size_t count) {

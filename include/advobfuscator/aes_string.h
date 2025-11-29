@@ -93,6 +93,7 @@ namespace andrivet::advobfuscator {
   private:
     /// Erase the information stored by the string (data, key and nonce)
     constexpr void erase() noexcept {
+      if (encrypted_) return;
       std::fill(data_.begin(), data_.end(), 0);
       std::fill(key_.begin(), key_.end(), 0);
       std::fill(nonce_.begin(), nonce_.end(), 0);

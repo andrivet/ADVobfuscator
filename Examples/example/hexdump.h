@@ -36,10 +36,10 @@ namespace hexdump {
   std::basic_ostream<char> &operator<<(std::basic_ostream<char> &out, const custom_hexdump<row_size, show_ascii> &dump) {
     out.fill('0');
     for(std::size_t i = 0; i < dump.length_; i += row_size) {
-      out << "0x" << std::setw(6) << std::hex << i << ": ";
+      out << "0x" << std::setw(6) << std::hex << i << std::dec << ": ";
       for(int j = 0; j < row_size; ++j) {
-        if(i + j < dump.length_)
-          out << std::hex << std::setw(2) << static_cast<int>(dump.data_[i + j]) << " ";
+        if (i + j < dump.length_)
+          out << std::hex << std::setw(2) << static_cast<int>(dump.data_[i + j]) << std::dec << " ";
         else
           out << "   ";
       }

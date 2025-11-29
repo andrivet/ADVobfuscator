@@ -126,7 +126,8 @@ namespace andrivet::advobfuscator {
 
     /// Erase the information stored by the block (data)
     constexpr void erase() noexcept {
-      std::fill(data_.begin(), data_.end(), 0);
+      if(!obfuscated_)
+        std::fill(data_.begin(), data_.end(), 0);
     }
 
     /// Encode (obfuscate) the block of data.

@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <advobfuscator/string.h>
+#include <advobfuscator/format.h>
 #include <advobfuscator/bytes.h>
 #include <advobfuscator/aes.h>
 #include <advobfuscator/aes_string.h>
@@ -41,6 +42,9 @@ void strings_obfuscation() {
   // Obfuscate a string literal
   std::cout << "abc"_obf << '\n';
   describe("abc"_obf);
+
+  // Using std::format
+  std::cout << std::format("{}\n", "abc"_obf);
 
   // Obfuscate a string literal and describe it after deobfuscation
   auto s1{"0123456789"_obf};
@@ -114,7 +118,7 @@ void blocks_obfuscation() {
   }
 }
 
-void aes_encryption_certificate() {
+void certificate_obfuscation() {
   auto s1 = R"(-----BEGIN CERTIFICATE-----
 MIICUTCCAfugAwIBAgIBADANBgkqhkiG9w0BAQQFADBXMQswCQYDVQQGEwJDTjEL
 MAkGA1UECBMCUE4xCzAJBgNVBAcTAkNOMQswCQYDVQQKEwJPTjELMAkGA1UECxMC
@@ -132,6 +136,9 @@ Wm7DCfrPNGVwFWUQOmsPue9rZBgO
 -----END CERTIFICATE-----)"_obf;
 
   std::cout << s1 << '\n';
+
+  // With std::format
+  std::cout << std::format("{}\n", s1);
 }
 
 void aes_encryption_strings() {
@@ -177,7 +184,7 @@ void obfuscate_method_call() {
 int main() {
   strings_obfuscation();
   blocks_obfuscation();
-  aes_encryption_certificate();
+  certificate_obfuscation();
   aes_encryption_strings();
   obfuscate_call1();
   obfuscate_call2();
