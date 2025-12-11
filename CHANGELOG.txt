@@ -1,7 +1,17 @@
-July 2025
----------
+2.1.1 - December 11, 2025
+-------------------------
 
-- A brand new implementation based on C++20, UDL (user-defined literals) and more.
+- #43 - Fix CMakeFiles.txt
+
+2.1.0 - November 29, 2025
+-------------------------
+
+- #40 - Fix an issue when trying to include the head-only file multiple times.
+
+2.0.0 - August 29, 2025
+---------------
+
+- A brand-new implementation based on C++20, UDL (user-defined literals) and more.
 
 August 2017
 ------------
