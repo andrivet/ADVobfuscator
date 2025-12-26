@@ -1,0 +1,100 @@
+<h1 id="installation-usage">Installation &amp; Usage</h1>
+<p><strong>ADVobjuscator</strong> is a header-only C++ library that
+integrates cleanly with CMake. There are several possibilities to
+install and use it:</p>
+<ul>
+<li>Option 0: Manual download</li>
+<li>Option 1: Install &amp; Use via <code>find_package</code></li>
+<li>Option 2: Add as a Git Submodule / Subdirectory</li>
+<li>Option 3: Use with <code>FetchContent</code> in CMake</li>
+</ul>
+<h2 id="option-0-manual-download">Option 0: Manual download</h2>
+<p>If you don’t use CMake or prefer to copy files manually:</p>
+<ol type="1">
+<li>Download</li>
+</ol>
+<ul>
+<li>Click the green “Code” button on GitHub → Download ZIP</li>
+<li>or download only the <code>include/</code> folder</li>
+</ul>
+<ol start="2" type="1">
+<li>Copy</li>
+</ol>
+<p>Copy the <code>include/advobfuscator/</code> directory into your own
+project’s <code>include/</code> folder.</p>
+<ol start="3" type="1">
+<li>Include It in Your Code</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;advobfuscator/obfuscate.h&quot;</span></span></code></pre></div>
+<p>Make sure your compiler includes the path:</p>
+<pre class="shell"><code>g++ -Iinclude myapp.cpp</code></pre>
+<p>If you are using CMake, here is an example of
+<code>CMakeFiles.txt</code>:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode cmake"><code class="sourceCode cmake"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">cmake_minimum_required</span>(<span class="ot">VERSION</span> <span class="dt">3.14</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">project</span>(myproject <span class="ot">LANGUAGES</span> <span class="ot">CXX</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">set</span>(<span class="dv">CMAKE_CXX_STANDARD</span> 20)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">set</span>(<span class="dv">CMAKE_CXX_STANDARD_REQUIRED</span> <span class="ot">ON</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">add_executable</span>(<span class="bn">myapp</span> src/main.cpp)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the path to the manually downloaded headers</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">target_include_directories</span>(<span class="bn">myapp</span> <span class="ot">PRIVATE</span> <span class="dv">${CMAKE_SOURCE_DIR}</span>/include)</span></code></pre></div>
+<h2 id="option-1-install-use-via-find_package">Option 1: Install &amp;
+Use via <code>find_package</code></h2>
+<ol type="1">
+<li>Clone and Install the Library</li>
+</ol>
+<pre class="shell"><code>git clone https://github.com/yourusername/advobfuscator.git
+cd advobfuscator
+cmake -B build -DCMAKE_INSTALL_PREFIX=/your/install/prefix
+cmake --build build --target install</code></pre>
+<p>Replace <code>/your/install/prefix</code> with the desired install
+location (e.g., <code>/usr/local</code> or a custom path).</p>
+<ol start="2" type="1">
+<li>Link from Your CMake Project</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode cmake"><code class="sourceCode cmake"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">cmake_minimum_required</span>(<span class="ot">VERSION</span> <span class="dt">3.14</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">project</span>(myproject)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add path to CMAKE_PREFIX_PATH if not system-installed</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">list</span>(<span class="ot">APPEND</span> <span class="dv">CMAKE_PREFIX_PATH</span> <span class="st">&quot;/your/install/prefix&quot;</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">find_package</span>(advobfuscator <span class="ot">REQUIRED</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">add_executable</span>(<span class="bn">myapp</span> main.cpp)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="kw">target_link_libraries</span>(<span class="bn">myapp</span> <span class="ot">PRIVATE</span> <span class="bn">advobfuscator::advobfuscator</span>)</span></code></pre></div>
+<h2 id="option-2-add-as-a-git-submodule-subdirectory">Option 2: Add as a
+Git Submodule / Subdirectory</h2>
+<ol type="1">
+<li>Add the Library to Your Project</li>
+</ol>
+<pre class="shell"><code>git submodule add https://github.com/andrivet/advobfuscator.git external/advobfuscator</code></pre>
+<ol start="2" type="1">
+<li>Link from Your CMake Project</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode cmake"><code class="sourceCode cmake"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">add_subdirectory</span>(external/advobfuscator)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">add_executable</span>(<span class="bn">myapp</span> main.cpp)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">target_link_libraries</span>(<span class="bn">myapp</span> <span class="ot">PRIVATE</span> <span class="bn">advobfuscator::advobfuscator</span>)</span></code></pre></div>
+<h2 id="option-3-use-with-fetchcontent-in-cmake">Option 3: Use with
+FetchContent in CMake</h2>
+<p>If you want CMake (3.14 or higher) to automatically fetch and
+integrate <strong>ADVObfuscator</strong>:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode cmake"><code class="sourceCode cmake"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">include</span>(<span class="im">FetchContent</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchContent_Declare</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    advobfuscator</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">GIT_REPOSITORY</span> https://github.com/andrivet/advobfuscator.git</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="ot">GIT_TAG</span>        v2.0  <span class="co"># Or use a branch or commit hash</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchContent_MakeAvailable</span>(advobfuscator)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="kw">add_executable</span>(<span class="bn">myapp</span> main.cpp)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="kw">target_link_libraries</span>(<span class="bn">myapp</span> <span class="ot">PRIVATE</span> <span class="bn">advobfuscator::advobfuscator</span>)</span></code></pre></div>

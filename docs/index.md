@@ -14,10 +14,10 @@ std::count << "Obfuscated string"_obf << "\n";
 
 ## Table of content
 
-* [Installation and Usage](installation.md)
-* [How to obfuscate or encrypt data and code](obfuscation.md)
-* [Reverse engineering of an obfuscated executable](reverse-engineering.md)
-* [How it works](how.md)
+* [Installation and Usage](installation.html)
+* [How to obfuscate or encrypt data and code](obfuscation.html)
+* [Reverse engineering of an obfuscated executable](reverse-engineering.html)
+* [How it works](how.html)
 
 ## Copyright and license
 

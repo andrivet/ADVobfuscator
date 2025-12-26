@@ -1,0 +1,74 @@
+<h1 id="how-to-obfuscate-or-encrypt-data-and-code">How to obfuscate or
+encrypt data and code</h1>
+<h2 id="obfuscation-of-strings">Obfuscation of strings</h2>
+<p>Strings can be obfuscated using ADVobfuscator UDL (user-defined
+literal) <code>_obf</code>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;advobfuscator/string.h&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">&quot;abc&quot;</span><span class="op">_obf</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39;</span><span class="sc">\n</span><span class="ch">&#39;</span><span class="op">;</span></span></code></pre></div>
+<p>The string is obfuscated at compile time. The UDL constructs (at
+compile-time) an instance of <code>ObfuscatedString</code>. At run-time,
+there is an implicit cast operator to <code>const char*</code> so the
+deobfuscated string can be converted. This code is thus (almost)
+equivalent to:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> ObfuscatedString<span class="op">{</span><span class="st">&quot;abc&quot;</span><span class="op">}.</span>decode<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39;</span><span class="sc">\n</span><span class="ch">&#39;</span><span class="op">;</span></span></code></pre></div>
+<p>It is also possible to use <code>std::format</code>:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;advobfuscator/format.h&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="bu">std::</span>format<span class="op">(</span><span class="st">&quot;</span><span class="sc">{}\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="st">&quot;abc&quot;</span><span class="op">_obf);</span></span></code></pre></div>
+<p>Instances of obfuscated strings can be manipulated like any object.
+The implicit cast operator to <code>const char*</code> does modify the
+instance however (to decode the string). If the instance is immutable,
+you have to call explicitly <code>decode()</code> that returns a
+<code>std::string</code> and does not modify the instance:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> <span class="kw">constexpr</span> <span class="kw">auto</span> s4 <span class="op">=</span> <span class="st">&quot;An immutable compile-time string&quot;</span><span class="op">_obf;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> s4<span class="op">.</span>decode<span class="op">()</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39;</span><span class="sc">\n</span><span class="ch">&#39;</span><span class="op">;</span></span></code></pre></div>
+<h2 id="obfuscation-of-data">Obfuscation of data</h2>
+<p>Blocks of data (<code>uint8_t</code>) can be obfuscated at
+compile-time using <code>_obf_bytes</code>:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;advobfuscator/bytes.h&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> <span class="kw">constexpr</span> <span class="kw">auto</span> data <span class="op">=</span> <span class="st">&quot;01 02 04 08 10 20 40 80 1b 36&quot;</span><span class="op">_obf_bytes;</span></span></code></pre></div>
+<p>The format has to follow these rules:</p>
+<ul>
+<li>Each byte is represented by two hexadecimal digits.</li>
+<li>These hexadecimal digits can be in lower or upper case.</li>
+<li>Bytes have to be separated by space.</li>
+</ul>
+<p>At compile-time, an instance of <code>ObfuscatedBytes</code> is
+created. This class provides a subscript operator that decodes, at
+run-time, the obfuscated data:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">auto</span> d <span class="op">=</span> data<span class="op">[</span><span class="dv">0</span><span class="op">];</span>  <span class="co">// d is an uin8_t</span></span></code></pre></div>
+<p>It is also possible to decode the whole data with
+<code>decode()</code>:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">auto</span> decoded <span class="op">=</span> data<span class="op">.</span>decode<span class="op">();</span> <span class="co">// decoded is an std::array&lt;uint8_t, N&gt;</span></span></code></pre></div>
+<p>There is also a <code>data()</code> member function that decodes the
+data in-place:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">auto</span> data <span class="op">=</span> <span class="st">&quot;01 02 04 08 10 20 40 80 1b 36&quot;</span><span class="op">_obf_bytes;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">auto</span> decoded <span class="op">=</span> data<span class="op">.</span>data<span class="op">();</span> <span class="co">// decoded is an const std::uint8_t</span></span></code></pre></div>
+<h2 id="encryption-of-strings-with-aes">Encryption of strings with
+AES</h2>
+<p>In this version, it is also possible to encrypt the strings at
+compile-time using AES. The usage is however limited because of
+limitation of compilers (compile-time AES is quite complex for them). In
+practice, you can also encrypt strings that are not too long with the
+<code>_aes</code> UDL. The behaviour is similar to obfuscated
+strings:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;advobfuscator/aes_string.h&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> <span class="st">&quot;This is a string containing a secret that has to be hidden with AES&quot;</span><span class="op">_aes</span> <span class="op">&lt;&lt;</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span></code></pre></div>
+<blockquote>
+<p>Note: The S-box and other well-known data used by AES are
+obfuscated.</p>
+</blockquote>
+<h2 id="obfuscation-of-function-calls">Obfuscation of function
+calls</h2>
