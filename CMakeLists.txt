@@ -47,5 +47,5 @@ if(BUILD_TESTING)
 endif()
 
 if(BUILD_EXAMPLES)
-    add_subdirectory(examples)
+    add_subdirectory(Examples)
 endif()
