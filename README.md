@@ -35,7 +35,7 @@ cmake --build .
 
 Each example is in its subdirectory. For example `./example/demo`.
 
-### Windows (Visual Studio 22)
+### Windows (Visual Studio)
 
 Open `ADVobfuscator.sln`.
 
