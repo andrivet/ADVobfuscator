@@ -56,7 +56,7 @@ At compile-time, an instance of `ObfuscatedBytes` is created.
 This class provides a subscript operator that decodes, at run-time, the obfuscated data:
 
 ```c++
-auto d = data[0];  // d is an uin8_t
+auto d = data[0];  // d is a uin8_t
 ```
 
 It is also possible to decode the whole data with `decode()`:
@@ -69,7 +69,7 @@ There is also a `data()` member function that decodes the data in-place:
 
 ```c++
 auto data = "01 02 04 08 10 20 40 80 1b 36"_obf_bytes;
-auto decoded = data.data(); // decoded is an const std::uint8_t
+auto decoded = data.data(); // decoded is a const std::uint8_t
 ```
 
 

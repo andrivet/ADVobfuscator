@@ -41,8 +41,8 @@ namespace andrivet::advobfuscator {
   template<std::size_t N>
   struct ObfuscatedBytes {
     /// Construct a compile-time block of bytes from a string.
-    /// \lparam str Array of characters representing bytes to be encrypted at compile-time.
-    /// The format of the string is: two hexadecimal digits seperated by spaces.
+    /// \param str Array of characters representing bytes to be encrypted at compile-time.
+    /// The format of the string is: two hexadecimal digits separated by spaces.
     /// Example: "01 02 03 1F".
     /// \remark A set of obfuscation algorithms are generated on the fly.
     consteval ObfuscatedBytes(const char (&str)[N])
@@ -65,7 +65,7 @@ namespace andrivet::advobfuscator {
     [[nodiscard]] std::size_t size() const noexcept { return N / 3; }
 
     /// Direct access to a byte in the block.
-    /// \lparam pos Position of the byte in the block.
+    /// \param pos Position of the byte in the block.
     /// \return The decoded byte.
     [[nodiscard]] constexpr std::uint8_t operator[](std::size_t pos) const {
       std::uint8_t b{data_[pos]};

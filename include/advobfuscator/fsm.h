@@ -68,10 +68,10 @@ namespace andrivet::advobfuscator {
     };
   }
 
-  /// A finite state machine that recognize a number bit per bit,
+  /// A finite state machine that recognizes a number bit per bit,
   template<typename O>
   struct Fsm {
-    /// Construct a new finite state machine that recognize a number and store an object.
+    /// Construct a new finite state machine that recognizes a number and stores an object.
     /// \param recognize The number to be recognized by this finite state machine.
     /// \param o The object stored in one of the transition (the active one).
     consteval Fsm(std::uint32_t recognize, O o) {

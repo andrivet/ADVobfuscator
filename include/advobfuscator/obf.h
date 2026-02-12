@@ -87,7 +87,7 @@ namespace andrivet::advobfuscator {
       return result;
     }
 
-    /// Generalized Caesar cypher (ROT).
+    /// Generalized Caesar cipher (ROT).
     /// \param b Input byte.
     /// \param d Displacement for the rotation.
     /// \result The result of the rotation.
@@ -95,7 +95,7 @@ namespace andrivet::advobfuscator {
       return static_cast<std::uint8_t>((d >= 128 ? b + d - 256 : b + d) % 256);
     }
 
-    /// Generalized Inverted Caesar cypher.
+    /// Generalized Inverted Caesar cipher.
     /// \param b Input byte.
     /// \param d Displacement for the inverted rotation.
     /// \result The result of the inverted rotation.

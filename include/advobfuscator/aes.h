@@ -42,7 +42,7 @@
 #include "bytes.h"
 
 namespace andrivet::advobfuscator {
-  /// Length of the cypher key
+  /// Length of the cipher key
   static constexpr std::size_t n_key{128}; // 128-bit or 192-bit or 256-bit
 
   // I prefer to use std::uin8_t instead of std::byte for the implicit conversions (from int)
