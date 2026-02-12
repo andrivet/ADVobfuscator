@@ -29,7 +29,7 @@ Examples
 ```
 mkdir -p BUILD
 cd BUILD
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
 ```
 
