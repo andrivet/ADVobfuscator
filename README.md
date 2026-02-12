@@ -10,7 +10,7 @@ Strings or blocks of data can be obfuscated or encrypted at compile time, and th
 How to use it?
 ==============
 
-The [documentation](http://andrivet.github.io/ADVobfuscator/) explains how to install and use **ADVobfuscator**.
+The [documentation](https://github.com/andrivet/ADVobfuscator/docs/ADVobfuscator.pdf) explains how the library is built, how to install and use it.
 
 Look also at the examples in the `Examples` folder.
 
@@ -53,17 +53,19 @@ Compatibility
 
 **ADVobfuscator** has been tested with:
 
-Compiler        | Version  | OS          | CPU     | Compatible |
-----------------|----------|-------------|---------|------------|
-Apple Clang     | 17.0.0   | macOS 15    | AArch64 | YES        |
-Clang           | 19.1.7   | Debian 13   | x86_64  | YES        |
-Clang           | 18.1.8   | Debian 13   | x86_64  | YES        |
-Clang           | 17.0.6   | Debian 13   | x86_64  | YES        |
-GCC             | 15.1.0   | macOS 15    | x86_64  | YES        |
-GCC             | 14.2.0   | macOS 15    | AArch64 | YES        |
-GCC             | 14.2.0   | Debian 13   | x86_64  | YES        |
-GCC             | 13.3.0   | macOS 15    | AArch64 | NO         |
-Visual Studio   | 17.14.13 | Windows 11  | AArch64 | YES        |
+Compiler            | Version  | OS         | CPU     | Obfuscation | AES     |
+--------------------|----------|------------|---------|-------------|---------|
+Apple Clang         | 17.0.0   | macOS 15   | AArch64 | YES         | limited |
+Clang               | 21.1.8   | Debian 14  | x86_64  | YES         | limited |
+Clang               | 19.1.7   | Debian 13  | x86_64  | YES         | limited |
+Clang               | 18.1.8   | Debian 13  | x86_64  | YES         | limited |
+Clang               | 17.0.6   | Debian 13  | x86_64  | YES         | limited |
+GCC                 | 15.1.0   | macOS 15   | x86_64  | YES         | YES     |
+GCC                 | 14.2.0   | macOS 15   | AArch64 | YES         | YES     |
+GCC                 | 14.2.0   | Debian 13  | x86_64  | YES         | YES     |
+GCC                 | 13.3.0   | macOS 15   | AArch64 | NO          | NO      |
+Visual Studio 2022  | 17.14.13 | Windows 11 | AArch64 | YES         | limited |
+Visual Studio 2026  | 18.0.339 | Windows 11 | AArch64 | YES         | limited |
 
 Other compilers are probably compatible if they are `C++20` compliant.
 
