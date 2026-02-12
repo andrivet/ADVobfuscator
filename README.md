@@ -10,7 +10,7 @@ Strings or blocks of data can be obfuscated or encrypted at compile time, and th
 How to use it?
 ==============
 
-The [documentation](https://github.com/andrivet/ADVobfuscator/blob/main/docs/ADVobfuscator.pdf) explains how the library is built, how to install and use it.
+The [documentation](https://andrivet.github.io/ADVobfuscator/ADVobfuscator.pdf) explains how the library is built, how to install and use it.
 
 Look also at the examples in the `Examples` folder.
 
