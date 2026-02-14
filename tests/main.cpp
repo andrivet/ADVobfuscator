@@ -26,12 +26,78 @@
 // Get latest version on https://github.com/andrivet/ADVobfuscator
 
 #include <cassert>
+#include <array>
+#include <utility>
 #include <advobfuscator/string.h>
 #include <advobfuscator/bytes.h>
 #include <advobfuscator/aes.h>
 #include <advobfuscator/aes_string.h>
+#include <advobfuscator/random.h>
 
 using namespace andrivet::advobfuscator;
+
+namespace {
+
+template<std::size_t... I>
+consteval auto make_random_values(std::index_sequence<I...>) {
+  return std::array<std::size_t, sizeof...(I)>{generate_random<std::size_t>(I, 997)...};
+}
+
+template<std::size_t... I>
+consteval auto make_random_not_zero_values(std::index_sequence<I...>) {
+  return std::array<std::size_t, sizeof...(I)>{generate_random_not_0<std::size_t>(I, 17)...};
+}
+
+template<std::size_t... I>
+consteval auto make_random_range_values(std::index_sequence<I...>) {
+  return std::array<std::size_t, sizeof...(I)>{generate_random<std::size_t>(I, 100, 200)...};
+}
+
+}
+
+void test_random_generation() {
+  constexpr auto values = make_random_values(std::make_index_sequence<64>{});
+  constexpr auto values_again = make_random_values(std::make_index_sequence<64>{});
+  for(std::size_t i = 0; i < values.size(); ++i) {
+    assert(values[i] < 997);
+    assert(values[i] == values_again[i]);
+  }
+
+  constexpr auto non_zero_values = make_random_not_zero_values(std::make_index_sequence<64>{});
+  for(auto value: non_zero_values) {
+    assert(value > 0);
+    assert(value < 17);
+  }
+
+  constexpr auto range_values = make_random_range_values(std::make_index_sequence<64>{});
+  for(auto value: range_values) {
+    assert(value >= 100);
+    assert(value < 200);
+  }
+
+  constexpr auto single_value_range = generate_random<std::size_t>(123, 1);
+  constexpr auto single_value_non_zero = generate_random_not_0<std::size_t>(123, 2);
+  constexpr auto unit_span_range = generate_random<std::size_t>(123, 42, 43);
+  assert(single_value_range == 0);
+  assert(single_value_non_zero == 1);
+  assert(unit_span_range == 42);
+
+  constexpr auto block = generate_random_block<32>(777);
+  constexpr auto block_again = generate_random_block<32>(777);
+  constexpr auto block_other = generate_random_block<32>(778);
+  assert(block == block_again);
+  assert(block != block_other);
+}
+
+void test_random_sum() {
+  constexpr auto sum_abc = generate_sum("ABC");
+  constexpr auto sum_wrapped = generate_sum("A", 999);
+  constexpr auto sum_ff = generate_sum("\xFF");
+
+  assert(sum_abc == 198);
+  assert(sum_wrapped == 64);
+  assert(sum_ff == 255);
+}
 
 void test_strings_obfuscation() {
   auto s0 = "abc"_obf;
@@ -338,6 +404,8 @@ void test_aes_ctr_cipher() {
 
 
 int main() {
+  test_random_generation();
+  test_random_sum();
   test_strings_obfuscation();
   test_block_obfuscation();
   test_aes_key_expansion();
