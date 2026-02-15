@@ -68,7 +68,7 @@ namespace andrivet::advobfuscator {
     [[nodiscard]] constexpr std::string decrypt() const {
       std::array<std::uint8_t, N> buffer;
       std::copy(data_.begin(), data_.end(), buffer.begin());
-      if(encrypted_) decrypt_ctr(buffer.begin(), N, key_, nonce_);
+      if(encrypted_) decrypt_ctr(buffer.data(), N, key_, nonce_);
       std::string str;
       str.resize(N - 1);
       std::copy(buffer.begin(), buffer.end() - 1, str.begin());
