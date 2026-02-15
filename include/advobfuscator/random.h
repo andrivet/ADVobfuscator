@@ -25,7 +25,11 @@
 //
 // Get latest version on https://github.com/andrivet/ADVobfuscator
 
+#include <array>
+#include <bit>
+#include <cstddef>
 #include <cstdint>
+#include <limits>
 
 #ifndef ADVOBFUSCATOR_RANDOM_H
 #define ADVOBFUSCATOR_RANDOM_H
@@ -34,14 +38,12 @@ namespace andrivet::advobfuscator {
 
   namespace details {
 
-    /// Use current (compile time) as a seed
-    static constexpr char time[] = __TIME__; // __TIME__ has the following format: hh:mm:ss in 24-hour time
+    static constexpr char time[] = __TIME__;
+    static constexpr char date[] = __DATE__;
 
-    /// Convert a digit into the corresponding number
     constexpr int digit_to_int(char c) { return c - '0'; }
 
-    /// Convert time string (hh:mm:ss) into a number
-    static constexpr unsigned seed =
+    static constexpr unsigned time_seed =
       digit_to_int(time[7]) +
       digit_to_int(time[6]) * 10 +
       digit_to_int(time[4]) * 60 +
@@ -49,85 +51,100 @@ namespace andrivet::advobfuscator {
       digit_to_int(time[1]) * 3600 +
       digit_to_int(time[0]) * 36000;
 
-    /// Generate a (pseudo) random number.
-    /// \tparam T Type of the number to generate (std::size_t by default).
-    /// \param count The count for the generation of random numbers.
-    /// \param max The maximum value of the number generated (excluded).
-    /// \return A number generated randomly.
-    /// \remarks Inspired by 1988, Stephen Park and Keith Miller
-    /// "Random Number Generators: Good Ones Are Hard To Find", considered as "minimal standard"
-    /// Park-Miller 31 bit pseudo-random number generator, implemented with G. Carta's optimisation:
-    /// with 32-bit math and without division
-    template<typename T = std::size_t>
-    consteval T generate_random(std::size_t count, T max) {
-      const uint32_t a = 16807;        // 7^5
-      const uint32_t m = 2147483647;   // 2^31 - 1
+    constexpr int month_to_int(const char* m) {
+      return (m[0] == 'J' && m[1] == 'a') ? 1 :
+             (m[0] == 'F') ? 2 :
+             (m[0] == 'M' && m[2] == 'r') ? 3 :
+             (m[0] == 'A' && m[1] == 'p') ? 4 :
+             (m[0] == 'M' && m[2] == 'y') ? 5 :
+             (m[0] == 'J' && m[2] == 'n') ? 6 :
+             (m[0] == 'J' && m[2] == 'l') ? 7 :
+             (m[0] == 'A' && m[1] == 'u') ? 8 :
+             (m[0] == 'S') ? 9 :
+             (m[0] == 'O') ? 10 :
+             (m[0] == 'N') ? 11 : 12;
+    }
 
-      auto s = seed;
-      while(count-- > 0) {
-        uint32_t lo = a * (s & 0xFFFF);                // Multiply lower 16 bits by 16807
-        uint32_t hi = a * (s >> 16);                   // Multiply higher 16 bits by 16807
-        uint32_t lo2 = lo + ((hi & 0x7FFF) << 16);     // Combine lower 15 bits of hi with lo's upper bits
-        uint32_t lo3 = lo2 + hi;
-        s = lo3 > m ? lo3 - m : lo3;
+    static constexpr unsigned date_seed =
+      (date[4] == ' ' ? digit_to_int(date[5]) : digit_to_int(date[4]) * 10 + digit_to_int(date[5])) +
+      month_to_int(date) * 31 +
+      (digit_to_int(date[10]) + digit_to_int(date[9]) * 10 + digit_to_int(date[8]) * 100 + digit_to_int(date[7]) * 1000) * 372;
+
+    static constexpr uint64_t base_seed =
+      (static_cast<uint64_t>(time_seed) << 32) | static_cast<uint64_t>(date_seed);
+
+    consteval uint64_t splitmix64(uint64_t x) {
+      x ^= x >> 30;
+      x *= 0xbf58476d1ce4e5b9ULL;
+      x ^= x >> 27;
+      x *= 0x94d049bb133111ebULL;
+      x ^= x >> 31;
+      return x;
+    }
+
+    struct SFC64 {
+      uint64_t a = 0;
+      uint64_t b = 0;
+      uint64_t c = 0;
+      uint64_t w = 0;
+
+      consteval void seed(uint64_t s) {
+        a = splitmix64(s);
+        b = splitmix64(a);
+        c = splitmix64(b);
+        w = 1;
+        for(int i = 0; i < 12; ++i) next();
       }
 
-      // Note: A bias is introduced by the modulo operation.
-      // However, I do believe it is negligible in this case (M is far lower than 2^31 - 1)
-      return static_cast<T>(s % static_cast<uint32_t>(max));
+      consteval uint64_t next() {
+        uint64_t tmp = a + b + w++;
+        a = b ^ (b >> 11);
+        b = c + (c << 3);
+        c = std::rotl(c, 24) + tmp;
+        return tmp;
+      }
+    };
+
+    template<typename T>
+    consteval T generate_random(std::size_t count, T max) {
+      const uint64_t seed = base_seed ^ splitmix64(static_cast<uint64_t>(count));
+      SFC64 rng;
+      rng.seed(seed);
+      const uint64_t value = rng.next();
+      return static_cast<T>(value % static_cast<uint64_t>(max));
     }
   }
 
-  /// Generate a (pseudo) random number strictly greater than 0.
-  /// \tparam T Type of the number to generate (std::size_t by default).
-  /// \param count Randomization counter.
-  /// \param max The maximum value of the number generated (excluded).
   template<typename T = std::size_t>
   consteval T generate_random_not_0(std::size_t count, T max) {
-    return static_cast<T>(details::generate_random(count, static_cast<uint32_t>(max) - 1) + 1);
+    return static_cast<T>(details::generate_random(count, static_cast<uint64_t>(max) - 1) + 1);
   }
 
-  /// Generate a (pseudo) random number in a range.
-  /// \tparam T Type of the number to generate (std::size_t by default).
-  /// \param count Randomization counter.
-  /// \param max The maximum value of the number generated (excluded).
   template<typename T = std::size_t>
   consteval T generate_random(std::size_t count, T min, T max) {
-    return static_cast<T>(details::generate_random(count, static_cast<uint32_t>(max) - static_cast<uint32_t>(min)) + static_cast<unsigned>(min));
+    return static_cast<T>(details::generate_random(count, static_cast<uint64_t>(max) - static_cast<uint64_t>(min)) + static_cast<uint64_t>(min));
   }
 
-  /// Generate a (pseudo) random number in a range (0 included).
-  /// \tparam T Type of the number to generate (std::size_t by default).
-  /// \param count Randomization counter.
-  /// \param max The maximum value of the number generated (excluded).
   template<typename T = std::size_t>
   consteval T generate_random(std::size_t count, T max) {
-    return static_cast<T>(details::generate_random(count, static_cast<uint32_t>(max)));
+    return static_cast<T>(details::generate_random(count, static_cast<uint64_t>(max)));
   }
 
-  /// Generate block of (pseudo) random numbers.
-  /// \tparam N The size of the block of numbers.
-  /// \param count Randomization counter.
-  /// \return An array of (pseudo) random numbers.
   template<std::size_t N>
   consteval std::array<std::uint8_t, N> generate_random_block(std::size_t count) {
-    std::array<std::uint8_t, N> block;
-    for(std::size_t i = 0; i < N; ++i) block[i] = details::generate_random(count + i, 256);
+    std::array<std::uint8_t, N> block{};
+    for(std::size_t i = 0; i < N; ++i)
+      block[i] = static_cast<std::uint8_t>(details::generate_random(count + i, static_cast<uint64_t>(256)));
     return block;
   }
 
-  /// Compute the sum of a initial number of of the values of characters.
-  /// \tparam N The number of characters.
-  /// \param str The string of characters.
-  /// \param initial The initial value of the sum (0 by default).
   template<unsigned N>
-  consteval std::size_t generate_sum(char const (&str)[N], size_t initial = 0) {
+  consteval std::size_t generate_sum(char const (&str)[N], std::size_t initial = 0) {
     std::size_t sum = initial;
-    for(std::size_t i = 0; i < N; ++i) sum = (sum + str[i]) % 1000;
+    for(std::size_t i = 0; i < N; ++i) sum = (sum + static_cast<unsigned char>(str[i])) % 1000;
     return sum;
   }
 
 }
 
 #endif
-
