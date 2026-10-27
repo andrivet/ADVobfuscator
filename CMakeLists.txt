@@ -1,8 +1,18 @@
 cmake_minimum_required(VERSION 3.14)
 project(advobfuscator VERSION 2.1.3 LANGUAGES CXX)
 
-option(BUILD_TESTING "Build unit tests" ON)
-option(BUILD_EXAMPLES "Build examples" ON)
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(ADVOBFUSCATOR_BUILD_EXTRAS_DEFAULT ON)
+else()
+    set(ADVOBFUSCATOR_BUILD_EXTRAS_DEFAULT OFF)
+endif()
+
+option(ADVOBFUSCATOR_BUILD_TESTING
+       "Build ADVobfuscator unit tests"
+       ${ADVOBFUSCATOR_BUILD_EXTRAS_DEFAULT})
+option(ADVOBFUSCATOR_BUILD_EXAMPLES
+       "Build ADVobfuscator examples"
+       ${ADVOBFUSCATOR_BUILD_EXTRAS_DEFAULT})
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -41,11 +51,11 @@ install(FILES
         DESTINATION ${CMAKE_INSTALL_DATADIR}/advobfuscator
 )
 
-if(BUILD_TESTING)
+if(ADVOBFUSCATOR_BUILD_TESTING)
     enable_testing()
     add_subdirectory(tests)
 endif()
 
-if(BUILD_EXAMPLES)
+if(ADVOBFUSCATOR_BUILD_EXAMPLES)
     add_subdirectory(Examples)
 endif()
